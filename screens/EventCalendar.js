@@ -15,7 +15,8 @@ import {
 import {
   Button,
   FormLabel,
-  FormInput
+  FormInput,
+  Icon
 } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
@@ -24,9 +25,9 @@ import { EventRegister } from 'react-native-event-listeners';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 
-export default class HomeFeed extends React.Component {
+export default class EventCalendar extends React.Component {
   static navigationOptions = {
-    title: 'The Feed',
+    title: 'The Big Day',
   };
 
   //constructor
@@ -73,33 +74,26 @@ export default class HomeFeed extends React.Component {
     
       //Else free to proceed
       return(
-          <KeyboardAvoidingView style={{
-            backgroundColor: 'white',
-            flex: 1,
-            paddingLeft: '3%',
-            paddingRight: '3%',
-            height: '100%',
-            width: '100%'
-          }}
-            behavior='position'
-            enabled
-          >
-            <ScrollView>
               <View style={{
+                backgroundColor: 'white',
+                flex: 1,
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                height: '100%',
+                width: '100%'
               }}>
-                <Text>
-                  This is the Feed
+                <Icon
+                  name='check-circle-o'
+                  type='font-awesome'
+                  color='#517fa4'
+                />
+                <Text style={{
+                  color: 'gray'
+                }}>
+                  Details for The Big Day
                 </Text>
               </View>
-                
-            </ScrollView>
-              <LoadingOverlay
-                isVisible={this.state.fetchIsLoading}
-                cancelOnPress={() => console.log('Cancel was pressed')}
-              />
-          </KeyboardAvoidingView>
       )
   }
 

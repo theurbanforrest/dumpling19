@@ -10,22 +10,44 @@ import SettingsScreen from '../screens/SettingsScreen';
 import HomeFeed from '../screens/HomeFeed';
 import SuperMap from '../screens/SuperMap';
 import FeedScreen from '../screens/HomeScreen';
+import Profile from '../screens/Profile';
+import EventCalendar from '../screens/EventCalendar';
 
 
 const HomeFeedStack = createStackNavigator({
   Home: HomeFeed
 })
 
+const EventCalendarStack = createStackNavigator({
+  Calendarey: EventCalendar,
+})
+
 const SuperMapStack = createStackNavigator({
   Mappy: SuperMap,
 })
+
+const ProfileStack = createStackNavigator({
+  Profiley: Profile,
+})
+
+
 
 HomeFeedStack.navigationOptions = {
   tabBarLabel: 'Feed',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-heart${focused ? '' : '-outline'}` : 'md-heart'}
+      name={Platform.OS === 'ios' ? `ios-pulse${focused ? '' : '-outline'}` : 'md-pulse'}
+    />
+  ),
+}
+
+EventCalendarStack.navigationOptions = {
+  tabBarLabel: 'The Big Day',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-calendar${focused ? '' : '-outline'}` : 'md-calendar'}
     />
   ),
 }
@@ -40,9 +62,21 @@ SuperMapStack.navigationOptions = {
   ),
 }
 
+ProfileStack.navigationOptions = {
+  tabBarLabel: 'Profile',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-happy${focused ? '' : '-outline'}` : 'md-happy'}
+    />
+  ),
+}
+
 
 
 export default createBottomTabNavigator({
   HomeFeedStack,
-  SuperMapStack
+  EventCalendarStack,
+  SuperMapStack,
+  ProfileStack
 });

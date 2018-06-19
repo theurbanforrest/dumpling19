@@ -102,12 +102,12 @@ export default class SuperMap extends React.Component {
               <Text style={{
                 color: 'gray'
               }}>
-                Cedar Hills PDX
+                Cedar Hills
               </Text>
               <Text style={{
                 color: 'gray'
               }}>
-                Our first apartment!
+                First apartment
               </Text>
             </View>
           </MapView.Callout>
@@ -132,42 +132,7 @@ export default class SuperMap extends React.Component {
               <Text style={{
                 color: 'gray'
               }}>
-                London 2017 Trip
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Harry Potter mania
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld3.1'}
-          coordinate={{
-            latitude: 22.442815, 
-            longitude: 114.164448
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Taipo HK
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Suki's OG hood
+                London
               </Text>
             </View>
           </MapView.Callout>
@@ -222,12 +187,12 @@ export default class SuperMap extends React.Component {
               <Text style={{
                 color: 'gray'
               }}>
-                Encore Beach Club
+                Vegas
               </Text>
               <Text style={{
                 color: 'gray'
               }}>
-                #vegaslife
+                #honorablemention
               </Text>
             </View>
           </MapView.Callout>
@@ -257,7 +222,7 @@ export default class SuperMap extends React.Component {
               <Text style={{
                 color: 'gray'
               }}>
-                A quick stint in Seattle
+                First home away from PDX
               </Text>
             </View>
           </MapView.Callout>
@@ -293,70 +258,10 @@ export default class SuperMap extends React.Component {
           </MapView.Callout>
         </MapView.Marker>
         <MapView.Marker
-          key={'AlohaWorld8'}
-          coordinate={{
-            latitude: 40.731204, 
-            longitude: -73.863594
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Fidelis
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Suki's work digs
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
           key={'AlohaWorld9'}
           coordinate={{
             latitude: 45.523764, 
             longitude: -122.680406
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Splash Bar
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Where we met
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld10'}
-          coordinate={{
-            latitude: 45.524183, 
-            longitude: -122.673583
           }}
           pinColor={'blue'}
           onPress={() => console.log('Marker pressed')}
@@ -377,7 +282,87 @@ export default class SuperMap extends React.Component {
               <Text style={{
                 color: 'gray'
               }}>
-                Forrest and da boyz party spot
+                #honorablemention
+              </Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+        <MapView.Marker
+          key={'AlohaWorld10'}
+          coordinate={{
+            latitude: 45.508944, 
+            longitude: -122.666346
+          }}
+          pinColor={'blue'}
+          onPress={() => console.log('Marker pressed')}
+        >
+          <MapView.Callout
+            tooltip={false}
+            onPress={()=> console.log('Callout pressed')}
+            style={{
+              //width: 150
+            }}
+          >
+            <View>
+              <Text style={{
+                color: 'gray'
+              }}>
+                OMSI
+              </Text>
+              <Text style={{
+                color: 'gray'
+              }}>
+                First date
+              </Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+        <MapView.Marker
+          key={'AlohaWorld11'}
+          coordinate={{
+            latitude: 41.393311, 
+            longitude: 2.161517
+          }}
+          pinColor={'blue'}
+          onPress={() => console.log('Marker pressed')}
+        >
+          <MapView.Callout
+            tooltip={false}
+            onPress={()=> console.log('Callout pressed')}
+            style={{
+              //width: 150
+            }}
+          >
+            <View>
+              <Text style={{
+                color: 'gray'
+              }}>
+                Barcelona
+              </Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+        <MapView.Marker
+          key={'AlohaWorld12'}
+          coordinate={{
+            latitude: 52.512295, 
+            longitude: 13.392826
+          }}
+          pinColor={'blue'}
+          onPress={() => console.log('Marker pressed')}
+        >
+          <MapView.Callout
+            tooltip={false}
+            onPress={()=> console.log('Callout pressed')}
+            style={{
+              //width: 150
+            }}
+          >
+            <View>
+              <Text style={{
+                color: 'gray'
+              }}>
+                Berlin
               </Text>
             </View>
           </MapView.Callout>
