@@ -1,0 +1,52 @@
+--- !com.amazonaws.mobilehub.v0.Project 
+features:
+  cloudlogic: !com.amazonaws.mobilehub.v0.CloudLogic 
+    components:
+      sampleCloudApi: !com.amazonaws.mobilehub.v0.API 
+        attributes:
+          name: sampleCloudApi
+          requires-signin: false
+          sdk-generation-stage-name: Development
+        paths:
+          /items: !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/sampleLambda-20180618220842.zip
+            description: 'Handler for calls to resource path : /items/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: JUuG2rMDqG0bBmOzXXOkaBCkM3Jz2xfWfeVCd8As4YE=
+            memorySize: '128'
+            modified: '2018-06-19T02:09:31.143+0000'
+            name: sampleLambda
+            runtime: nodejs6.10
+            timeout: '3'
+            version: PdDYF752nPD3ZrcozIz5sqR4tpQ6Zc3.
+          '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/sampleLambda-20180618220842.zip
+            description: 'Handler for calls to resource path : /items/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: JUuG2rMDqG0bBmOzXXOkaBCkM3Jz2xfWfeVCd8As4YE=
+            memorySize: '128'
+            modified: '2018-06-19T02:09:31.143+0000'
+            name: sampleLambda
+            runtime: nodejs6.10
+            timeout: '3'
+            version: l50NWn.22rHFmnOWf19kkhgZkhW6qCF3
+  content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
+    attributes:
+      enabled: true
+      visibility: public-global
+    components:
+      release: !com.amazonaws.mobilehub.v0.Bucket {}
+  mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint 
+    components:
+      analytics: !com.amazonaws.mobilehub.v0.PinpointAnalytics {}
+  sign-in: !com.amazonaws.mobilehub.v0.SignIn {}
+  user-files: !com.amazonaws.mobilehub.v0.UserFiles 
+    attributes:
+      enabled: true
+      wildcard-cors-policy: true
+name: ShukForrestWedding-2018-06-18-21-58-14
+region: us-east-1

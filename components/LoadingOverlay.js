@@ -3,7 +3,8 @@ import React from 'react'
 import {
   View,
   TouchableHighlight,
-  Text
+  Text,
+  Image
 } from 'react-native'
 import {
   Icon,
@@ -47,6 +48,7 @@ const LoadingOverlay = (props: LoadingOverlayProps) => {
             type='font-awesome'
             color='#97ACB3'
           />
+
           <Text style={{
             color: '#97ACB3',
             fontFamily: 'Menlo',
@@ -90,3 +92,18 @@ const LoadingOverlay = (props: LoadingOverlayProps) => {
 
 
 export default LoadingOverlay;
+
+
+/**
+
+//Peace sign as loading icon
+<Icon
+            size={48}
+            name='hand-peace-o'
+            type='font-awesome'
+            color='#97ACB3'
+          />
+
+
+**/
+

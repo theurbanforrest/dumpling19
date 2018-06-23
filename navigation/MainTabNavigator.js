@@ -4,22 +4,23 @@ import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
 import HomeFeed from '../screens/HomeFeed';
 import SuperMap from '../screens/SuperMap';
-import FeedScreen from '../screens/HomeScreen';
 import Profile from '../screens/Profile';
 import EventCalendar from '../screens/EventCalendar';
+import PostInitiator from '../screens/PostInitiator';
 
 
 const HomeFeedStack = createStackNavigator({
-  Home: HomeFeed
+  Homey: HomeFeed
 })
 
 const EventCalendarStack = createStackNavigator({
-  Calendarey: EventCalendar,
+  Calendary: EventCalendar,
+})
+
+const PostStack = createStackNavigator({
+  Posty: PostInitiator
 })
 
 const SuperMapStack = createStackNavigator({
@@ -52,6 +53,16 @@ EventCalendarStack.navigationOptions = {
   ),
 }
 
+PostStack.navigationOptions = {
+  tabBarLabel: '',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-add-circle${focused ? '' : '-outline'}` : 'md-add-outline'}
+    />
+  ),
+}
+
 SuperMapStack.navigationOptions = {
   tabBarLabel: 'Map',
   tabBarIcon: ({ focused }) => (
@@ -73,10 +84,18 @@ ProfileStack.navigationOptions = {
 }
 
 
-
-export default createBottomTabNavigator({
-  HomeFeedStack,
-  EventCalendarStack,
-  SuperMapStack,
-  ProfileStack
-});
+export default createBottomTabNavigator(
+  {
+    HomeFeedStack,
+    EventCalendarStack,
+    PostStack,
+    SuperMapStack,
+    ProfileStack
+  },
+  {
+    tabBarOptions: {
+      showLabel: false
+      //active and focused colors are in constants/Colors
+    }
+  }
+);

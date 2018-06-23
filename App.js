@@ -4,12 +4,27 @@ import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 
+//AWS
+import Amplify from 'aws-amplify';
+import {
+  Analytics
+} from 'aws-amplify';
+import aws_exports from './aws-exports';
+Amplify.configure(aws_exports);
+
+
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
   };
 
   render() {
+
+    //AWS Analytics
+    Analytics.record('appRender');
+
+    //Source
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading

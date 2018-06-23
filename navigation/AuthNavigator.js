@@ -17,6 +17,7 @@ import {
   FormLabel
 } from 'react-native-elements';
 import { EventRegister } from 'react-native-event-listeners';
+import Confetti from 'react-native-confetti';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 export default class AuthNavigator extends React.Component {
@@ -130,8 +131,18 @@ export default class AuthNavigator extends React.Component {
         })
   }
 
+  componentDidMount(){
+    if(this._confettiView) {
+       this._confettiView.startConfetti();
+    }
+  }
+
   componentWillUnmount() {
-        EventRegister.removeEventListener(this.listener)
+        EventRegister.removeEventListener(this.listener);
+        if (this._confettiView)
+        {
+            this._confettiView.stopConfetti();
+        }
     }
 
   render() {
@@ -150,6 +161,7 @@ export default class AuthNavigator extends React.Component {
           behavior='position'
           enabled
         >
+
           <View style={{
             justifyContent: 'space-between',
             //backgroundColor: 'magenta', //debug
@@ -159,6 +171,24 @@ export default class AuthNavigator extends React.Component {
               alignItems: 'center',
               //backgroundColor: 'green'  //debug
             }}>
+
+            <Confetti 
+                ref={(node) => this._confettiView = node}
+                colors={
+                  [
+                    "rgb(197,179,88)",
+                    "rgb(255,223,0)",
+                    "rgb(250,250,210)"
+                  ]
+                }
+                untilStopped={true}
+                duration={6000}
+                confettiCount={200}
+                timeout={1}
+                size={2}
+                bsize={2}
+              />
+
               <Image
                 style={{
                    paddingVertical: 30,
@@ -172,13 +202,16 @@ export default class AuthNavigator extends React.Component {
                  }}
                  onPress={() => console.log('this state is ' + JSON.stringify(this.state))}
                />
+
+              
+
                <Text style={{
                 fontFamily: 'Futura',
                 fontSize: 24,
                 paddingTop: 20,
                 paddingBottom: 20
                }}>
-               #ShukForrestAdventureTime
+               #ShukForrestWedding
                </Text>
              </View>
             <View style={{

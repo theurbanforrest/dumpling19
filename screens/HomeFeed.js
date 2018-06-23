@@ -22,6 +22,8 @@ import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { EventRegister } from 'react-native-event-listeners';
 import LoadingOverlay from '../components/LoadingOverlay';
+import { Storage } from 'aws-amplify';
+import CameraExample from '../components/CameraExample';
 
 
 export default class HomeFeed extends React.Component {
@@ -34,7 +36,8 @@ export default class HomeFeed extends React.Component {
       super(props);
 
       this.state = {
-        fetchIsLoading: false
+        fetchIsLoading: false,
+        awsPicture: 'https://randomuser.me/api/portraits/women/59.jpg'
       }
     }
 
@@ -61,12 +64,21 @@ export default class HomeFeed extends React.Component {
                 fetchIsLoading,
             })
         })
+
+        Storage.get('shuk-moji.png', {expires: 60})
+        .then(result => {
+          console.log('the result is ' + result);
+
+          this.setState({
+            awsPicture: result
+          });
+        })
+        .catch(err => console.log(err));
     }
 
     componentDidMount() {
       
     }
-
   //render
 
     render() {
@@ -92,6 +104,21 @@ export default class HomeFeed extends React.Component {
                 <Text>
                   This is the Feed
                 </Text>
+                <Image
+                style={{
+                   paddingVertical: 30,
+                   width: 200,
+                   height: 200,
+                   borderRadius: 100
+                 }}
+                 resizeMode='cover'
+                 source={{
+                  uri: this.state.awsPicture
+                 }}
+                 onPress={() => console.log('this state is ' + JSON.stringify(this.state))}
+               />
+
+
               </View>
                 
             </ScrollView>

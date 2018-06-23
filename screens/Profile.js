@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import {
   Image,
   Platform,
@@ -21,7 +21,9 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import { EventRegister } from 'react-native-event-listeners';
+import Confetti from 'react-native-confetti';
 import LoadingOverlay from '../components/LoadingOverlay';
+import ImagePickerExample from '../components/ImagePickerExample';
 
 
 export default class Profile extends React.Component {
@@ -73,6 +75,11 @@ export default class Profile extends React.Component {
     }
 
     componentDidMount() {
+      if(this._confettiView) {
+       this._confettiView.startConfetti();
+    }
+
+
       console.log('Profile.js componentDidMount');
 
       EventRegister.emit('fetchIsLoading',true);
@@ -126,7 +133,10 @@ export default class Profile extends React.Component {
     }
 
     componentWillUnmount() {
-      EventRegister.removeEventListener(this.listener)
+      EventRegister.removeEventListener(this.listener);
+      if(this._confettiView) {
+       this._confettiView.startConfetti();
+    }
     }
 
   //render
@@ -144,32 +154,36 @@ export default class Profile extends React.Component {
             behavior='position'
             enabled
           >
+            <Confetti 
+                ref={(node) => this._confettiView = node}
+                colors={
+                  [
+                    "rgb(197,179,88)",
+                    "rgb(255,223,0)",
+                    "rgb(250,250,210)"
+                  ]
+                }
+                untilStopped={true}
+                duration={6000}
+                confettiCount={200}
+                timeout={1}
+                size={2}
+                bsize={2}
+              />
+
             <ScrollView>
               <View style={{
                 justifyContent: 'space-around',
-                height: '100%'
+                height: '100%',
+                paddingTop: '5%'
               }}>
                 <View style={{
                   flexDirection: 'column',
                   alignItems: 'center'
                 }}>
                   
-                  <Text>
-                    {this.state.accessKey}
-                  </Text>
-                  <Image
-                    style={{
-                     paddingVertical: 30,
-                     width: 150,
-                     height: 150,
-                     borderRadius: 75
-                    }}
-                    resizeMode='cover'
-                    source={{
-                    uri: 'https://randomuser.me/api/portraits/men/41.jpg',
-                    }}
-                    onPress={() => console.log('this state is ' + JSON.stringify(this.state))}
-                  />
+                     <ImagePickerExample />
+
                 </View>
                 <View style={{
                   //backgroundColor: 'cyan',  //debug color
