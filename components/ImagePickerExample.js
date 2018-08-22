@@ -1,12 +1,35 @@
 import React from 'react';
-import { Button, Image, View, Text, TouchableOpacity } from 'react-native';
-import { ImagePicker } from 'expo';
+import { 
+  Button,
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert
+} from 'react-native';
+import { ImagePicker, ImageManipulator } from 'expo';
 import { Avatar, Badge } from 'react-native-elements';
+
+import { Storage, API } from 'aws-amplify';
+import Buffer from 'buffer';
 
 export default class ImagePickerExample extends React.Component {
   state = {
-    image: "https://s3.amazonaws.com/shukforrestwedding-userfiles-mobilehub-1260711576/public/shuk-moji.png",
+    image: '',
   };
+
+  componentWillMount(){
+    Storage.get('profileImage.png')
+    .then(result => {
+
+      this.setState({
+        image: result,
+      })
+      console.log(result);
+
+    })
+    .catch(err => console.log(err));
+  }
 
   render() {
     let { image } = this.state;
@@ -36,9 +59,9 @@ export default class ImagePickerExample extends React.Component {
           <Text style={{
             paddingTop: 10,
             paddingBottom: 10,
-            color: 'rgba(178,158,7,1.0)'
+            color: 'plum'
           }}>
-            + Edit Photo
+            + Edit Photo (Coming Soon)
           </Text>
         </TouchableOpacity>
       </View>
@@ -52,6 +75,122 @@ export default class ImagePickerExample extends React.Component {
     });
 
     console.log(result);
+    console.log('the result.uri is ' + result.uri); 
+
+      const manipResult = await ImageManipulator.manipulate(
+        result.uri,
+        [{ 
+          resize: {
+            width: 300
+          }
+        }],
+        { format: 'png', compress: 1 }
+      );
+
+      fetch(result.uri)
+      .then(response => {
+        console.log('response is ' + JSON.stringify(response));
+        
+        response.blob()
+        .then(blob => {
+
+          console.log('blob is ' + JSON.stringify(blob));
+          Alert.alert(
+              'Yo',
+              'blob is ' + JSON.stringify(blob),
+              [
+                {
+                  text: 'OK',
+                  onPress: () => console.log('OK Pressed')
+                }
+              ],
+              { cancelable: false }
+            )
+
+          Storage.put('profileImage.png', blob, {
+            contentType: 'application/octet-stream',
+            //level: 'public'
+          })
+          .then(data => {
+            console.log('data is ' + JSON.stringify(data));
+            Alert.alert(
+              'Chee!',
+              'Your pic has been saved.',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => console.log('OK Pressed')
+                }
+              ],
+              { cancelable: false }
+            )
+          })
+          .catch(err => {
+            console.log('error is ' + err);
+            Alert.alert(
+                  'Brah..',
+                  'Your pic was not saved. code: ' + err,
+                  [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  ],
+                  { cancelable: false }
+                )
+          })
+        })
+        .catch(err => console.log('response.blob() had error: ' + err))
+      })
+      .catch(err => console.log('fetch() errored out'));
+
+
+
+
+
+/**
+      const response = await fetch(manipResult.uri);
+        console.log('response is ' + JSON.stringify(response));
+**/
+
+      
+
+
+
+/**
+          
+
+      const blob = await response.blob();
+        console.log('blob is ' + JSON.stringify(blob));
+
+      const fileName = 'profileImage.png';
+
+      await Storage.put(fileName, blob, {
+        contentType: blob.type,
+        level: 'public'
+      }).then(data => {
+        console.log('data is ' + JSON.stringify(data));
+        console.log('after Storage.put(), blob is ' + JSON.stringify(blob))
+        Alert.alert(
+              'Chee!',
+              'Your pic has been saved.',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
+
+      })
+        .catch(err => {
+          console.log('error is ' + err);
+          Alert.alert(
+              'Brah..',
+              'Your pic was not saved. code: ' + err,
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
+
+      })
+**/
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });

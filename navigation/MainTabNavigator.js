@@ -9,26 +9,29 @@ import SuperMap from '../screens/SuperMap';
 import Profile from '../screens/Profile';
 import EventCalendar from '../screens/EventCalendar';
 import PostInitiator from '../screens/PostInitiator';
+import PostMediaEditor from '../screens/PostMediaEditor';
 
 
 const HomeFeedStack = createStackNavigator({
-  Homey: HomeFeed
+  Home: HomeFeed
 })
 
 const EventCalendarStack = createStackNavigator({
-  Calendary: EventCalendar,
+  Calendar: EventCalendar,
 })
 
 const PostStack = createStackNavigator({
-  Posty: PostInitiator
+  Start: PostInitiator,
+  Edit: PostMediaEditor,
+
 })
 
 const SuperMapStack = createStackNavigator({
-  Mappy: SuperMap,
+  Map: SuperMap,
 })
 
 const ProfileStack = createStackNavigator({
-  Profiley: Profile,
+  Profile: Profile,
 })
 
 
@@ -88,7 +91,7 @@ export default createBottomTabNavigator(
   {
     HomeFeedStack,
     EventCalendarStack,
-    PostStack,
+    //PostStack,
     SuperMapStack,
     ProfileStack
   },

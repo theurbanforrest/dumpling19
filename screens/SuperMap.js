@@ -12,6 +12,7 @@ import {
   MapView
 } from 'expo';
 
+import CoreMapMarkers from '../constants/CoreMapMarkers';
 
 export default class SuperMap extends React.Component {
   static navigationOptions = {
@@ -24,7 +25,6 @@ export default class SuperMap extends React.Component {
       super(props);
 
       this.state = {
-        cheeBoiButtonSelected: false
       };
     }
 
@@ -42,331 +42,50 @@ export default class SuperMap extends React.Component {
           longitudeDelta: 144.0,
         }}
       >
-        <MapView.Marker
-          key={'AlohaWorld1'}
-          coordinate={{
-            latitude: 21.316714,
-            longitude: -157.819206
-          }}
-          pinColor={'gold'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'black'}}
-              >
-                The Big Day @
-              </Text>
-              <Text style={{
-                color: 'black'}}
-              >
-                Nutridge Estates
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                2780 Nutridge St.
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Honolulu, HI 96822
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld2'}
-          coordinate={{
-            latitude: 45.505501, 
-            longitude: -122.783539
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Cedar Hills
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First apartment
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld3'}
-          coordinate={{
-            latitude: 51.513306,
-            longitude: -0.129871
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                London
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld4'}
-          coordinate={{
-            latitude: 22.442815, 
-            longitude: 114.164448
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Taipo HK
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Suki's OG hood
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld5'}
-          coordinate={{
-            latitude: 36.129493, 
-            longitude: -115.165687
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Vegas
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                #honorablemention
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-         <MapView.Marker
-          key={'AlohaWorld6'}
-          coordinate={{
-            latitude: 47.618397, 
-            longitude: -122.191252
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Bellevue
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First home away from PDX
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld7'}
-          coordinate={{
-            latitude: 40.692809, 
-            longitude: -73.986019
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Downtown Brooklyn
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Our home
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld9'}
-          coordinate={{
-            latitude: 45.523764, 
-            longitude: -122.680406
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Barrel Room
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                #honorablemention
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld10'}
-          coordinate={{
-            latitude: 45.508944, 
-            longitude: -122.666346
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                OMSI
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First date
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld11'}
-          coordinate={{
-            latitude: 41.393311, 
-            longitude: 2.161517
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Barcelona
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld12'}
-          coordinate={{
-            latitude: 52.512295, 
-            longitude: 13.392826
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Berlin
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
+   
+        //Data moved to CoreMapMarkers for reference
+
+        /* ---- CoreMapMarkers via mapping ---- */
+
+          {
+
+              //import CoreMapMarkers
+              CoreMapMarkers.map( (marker) => (
+                  <MapView.Marker
+                    key={marker.lat}
+                    coordinate={{
+                      latitude: marker.lat,
+                      longitude: marker.long
+                    }}
+                    pinColor={marker.pinColor}
+                    onPress={() => console.log(marker.callOut.h1 + ' pressed')}
+                  >
+                    <MapView.Callout
+                      tooltip={false}
+                      onPress={() => console.log(marker.callOut.cap1 + ' pressed')}
+                      style={{
+                        //width: 150
+                      }}
+                    >
+                      <View>
+                        <Text style={{
+                          color: 'gray'
+                        }}>
+                          {marker.callOut.h1}
+                        </Text>
+                        <Text style={{
+                          color: 'gray'
+                        }}>
+                          {marker.callOut.cap1}
+                        </Text>
+                      </View>
+                    </MapView.Callout>
+                  </MapView.Marker>
+                )
+              )
+          }
+
+        /* ---- End CoreMapMarkers ---- */
       </MapView>
     )
   }

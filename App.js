@@ -7,7 +7,9 @@ import RootNavigation from './navigation/RootNavigation';
 //AWS
 import Amplify from 'aws-amplify';
 import {
-  Analytics
+  Analytics,
+  API,
+  Storage
 } from 'aws-amplify';
 import aws_exports from './aws-exports';
 Amplify.configure(aws_exports);
@@ -48,6 +50,12 @@ export default class App extends React.Component {
       Asset.loadAsync([
         require('./assets/images/robot-dev.png'),
         require('./assets/images/robot-prod.png'),
+
+        //Any important assets needed for the entire app should be required here
+          require('./assets/images/gray-pine.png'),
+          require('./assets/images/nutridge-overlook.png'),
+          require('./assets/images/engaged.png'),
+          require('./assets/images/bg-piney.png')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar

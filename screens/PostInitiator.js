@@ -25,6 +25,7 @@ import { EventRegister } from 'react-native-event-listeners';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 import CameraExample from '../components/CameraExample';
+//import SuperCamera from '../components/SuperCamera';
 import Colors from '../constants/Colors';
 
 export default class PostInitiator extends React.Component {
@@ -36,32 +37,28 @@ export default class PostInitiator extends React.Component {
       this.state = {
         fetchIsLoading: false,
         hasCameraPermission: null,
-        type: Camera.Constants.Type.back
+        type: Camera.Constants.Type.back,
+        autoFocus: Camera.Constants.AutoFocus.on,
+        photo: {}
       }
     }
 
     async componentWillMount() {
 
-      //EventRegister > myCustomEvent
-        this.listener = EventRegister.addEventListener('myCustomEvent', (data) => {
-          this.setState({
-              data,
-          })
-        })
+      //EventRegister > pictureTaken
+        this.listener = EventRegister.addEventListener('pictureTaken', (photo) => {
+            console.log('pictureTaken received in PostInitiator with ' + JSON.stringify(photo));
 
-      //EventRegister > setAccessKey
-        this.listener = EventRegister.addEventListener('setAccessKey', (accessKey) => {
             this.setState({
-                accessKey,
+                photo,
             })
-        })
 
-        //EventRegister > fetchIsLoading
-        this.listener = EventRegister.addEventListener('fetchIsLoading', (fetchIsLoading) => {
-            console.log('fetchIsLoading emitted with ' + fetchIsLoading);
-            this.setState({
-                fetchIsLoading,
-            })
+            //console.log('this.state.photo is ' + JSON.stringify(this.state.photo))
+
+            console.log('try to navigate to Edit');
+            this.props.navigation.navigate('Edit',{
+              photo
+            });
         })
 
         //Permission to use Camera
@@ -88,7 +85,9 @@ export default class PostInitiator extends React.Component {
         <View style={{
           height: '70%',
         }}>
+
           <CameraExample />
+
         </View>
         <View style={{
           height: '30%',
@@ -96,20 +95,32 @@ export default class PostInitiator extends React.Component {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <Icon
-            reverse
-            name='camera'
-            type='font-awesome'
-            color={Colors.tintColor}
-            onPress={() => console.log('hello')}
-            size={40}
-          />
+          
         </View>
       </View>
     )
   }
+
+  componentWillUnmount(){
+    EventRegister.removeEventListener(this.listener);
+  }
   
 
 }
+
+/***
+  
+  <Icon
+      reverse
+      name='camera'
+      type='font-awesome'
+      color={Colors.tintColor}
+      onPress={() => this.props.navigation.navigate('Edit',{
+        editPhotoUrl: this.state.photo.uri
+      })}
+      size={40}
+          />
+
+***/
 
 

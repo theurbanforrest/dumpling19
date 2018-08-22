@@ -10,25 +10,29 @@ import {
   View,
   KeyboardAvoidingView,
   AsyncStorage,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import {
   Button,
   FormLabel,
-  FormInput
+  FormInput,
+  Avatar
 } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import { EventRegister } from 'react-native-event-listeners';
 import LoadingOverlay from '../components/LoadingOverlay';
-import { Storage } from 'aws-amplify';
-import CameraExample from '../components/CameraExample';
+import FeedItem from '../components/FeedItem'; 
+import { Storage, API } from 'aws-amplify';
+import HomeFeedItems from '../constants/HomeFeedItems';
+
 
 
 export default class HomeFeed extends React.Component {
   static navigationOptions = {
-    title: 'The Feed',
+    title: '#shukforrestwedding',
   };
 
   //constructor
@@ -65,244 +69,71 @@ export default class HomeFeed extends React.Component {
             })
         })
 
-        Storage.get('shuk-moji.png', {expires: 60})
+        Storage.get('profileImage.png')
         .then(result => {
-          console.log('the result is ' + result);
 
           this.setState({
-            awsPicture: result
-          });
+            image: result,
+          })
+          console.log(result);
+
         })
         .catch(err => console.log(err));
-    }
+        
+      }
+
+      
 
     componentDidMount() {
       
+
+      
+
     }
   //render
 
     render() {
+
+      let { image } = this.state;
+      console.log('this.state is ' + JSON.stringify(this.state));
+
+      let { height, width } = Dimensions.get('window');
+
+      const bestHeight = width * 0.9;
+      const bestWidth = width;
+
+      let str = '../assets/images/engaged.png';
     
       //Else free to proceed
       return(
-          <KeyboardAvoidingView style={{
-            backgroundColor: 'white',
-            flex: 1,
-            paddingLeft: '3%',
-            paddingRight: '3%',
-            height: '100%',
-            width: '100%'
+        <View style={{
+          position: 'relative'
+        }}>
+          <ScrollView style={{
+            flexDirection: 'column',
           }}
-            behavior='position'
-            enabled
           >
-            <ScrollView>
-              <View style={{
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text>
-                  This is the Feed
-                </Text>
-                <Image
-                style={{
-                   paddingVertical: 30,
-                   width: 200,
-                   height: 200,
-                   borderRadius: 100
-                 }}
-                 resizeMode='cover'
-                 source={{
-                  uri: this.state.awsPicture
-                 }}
-                 onPress={() => console.log('this state is ' + JSON.stringify(this.state))}
-               />
 
 
-              </View>
-                
-            </ScrollView>
-              <LoadingOverlay
-                isVisible={this.state.fetchIsLoading}
-                cancelOnPress={() => console.log('Cancel was pressed')}
-              />
-          </KeyboardAvoidingView>
+          {
+
+              //import FeedItems
+              HomeFeedItems.map( (x) => (
+
+                  <FeedItem
+                    key={x.id}
+                    userName={x.name}
+                    userPic={x.profile}
+                    postImage={x.picture}
+                    postCopy={x.caption}
+                  /> 
+              ))
+          }  
+          
+          </ScrollView>
+        </View>
       )
   }
 
-    putNewInfo(x,theId){
-      //posts info from this.state
 
-      console.log('x is ' + JSON.stringify(x));
-
-      let theBody = {};
-
-      //If this Guest's device is already in the database, Update info
-      if(x.id){
-        theBody = JSON.stringify({
-          'name': x.name,
-          'user_id': Expo.Constants.deviceId,
-          'plus_one': x.plus_one,
-          'drink_pref': x.drink_pref,
-          'food_allergies': x.food_allergies,
-          'id' : x.id
-        });
-      }
-      //Else Create it 
-      else theBody = JSON.stringify({
-          'name': x.name,
-          'user_id': Expo.Constants.deviceId,
-          'plus_one': x.plus_one,
-          'drink_pref': x.drink_pref,
-          'food_allergies': x.food_allergies
-      })
-
-      //debug
-      console.log('theBody is ' + JSON.stringify(theBody));
-
-
-      AsyncStorage.getItem('@ShukForrestWedding:userToken')
-      .then((theId) => {
-
-        let url = 'https://liquidpineapple.com:3000/api/BobaOrders?access_token=' + theId;
-        let theMethod = 'PUT';
-        let theHeaders = {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        };
-
-        EventRegister.emit('fetchIsLoading',true);
-
-        fetch(url, {
-          method: theMethod,
-          headers: theHeaders,
-          body: theBody
-        })
-        .then((response) => {
-           
-           console.log('response is ' + JSON.stringify(response));
-
-           if(response.status == 200){
-            Alert.alert(
-              'Chee!',
-              'Your RSVP has been updated',
-              [
-                {text: 'OK', onPress: () => console.log('OK Pressed')},
-              ],
-              { cancelable: false }
-            )
-           } 
-           else {
-            Alert.alert(
-              'Brahh..',
-              'Something went wrong.  Try again.',
-              [
-                {text: 'OK', onPress: () => console.log('OK Pressed')},
-              ],
-              { cancelable: false }
-            )
-           }
-
-           EventRegister.emit('fetchIsLoading',false);
-           return response.json()
-        })
-        .catch(() => {
-          EventRegister.emit('fetchIsLoading',false);
-          console.log('catch() was triggered')
-        })
-      })
-    }
-
-  anotherSignOut(){
-
-    EventRegister.emit('fetchIsLoading',true);
-
-    AsyncStorage.getItem('@ShukForrestWedding:userToken')
-    .then((theToken) => {
-      let theUrl = 'https://liquidpineapple.com:3000/api/CustomUsers/logout?access_token=' + theToken;
-      let theMethod = 'POST';
-      let theHeaders = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      };
-
-      fetch(theUrl,{
-          method: theMethod,
-          headers: theHeaders
-      })
-      .then((response) => {
-        console.log('logout response is ' + JSON.stringify(response))
-        if(response.status != 204){
-
-          EventRegister.emit('fetchIsLoading',false);
-          Alert.alert(
-            'Brah..',
-            'Something went wrong. Error code responseNot204',
-            [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-            { cancelable: false }
-          )
-        }
-        else return response.json();
-      })
-      .catch(() => {
-        /*console.log('catch after /logout fetch');
-        Alert.alert(
-          'Brah..',
-          'Something went wrong. Error code catch20.',
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )*/
-      })
-    })
-    .then((response) => {
-      AsyncStorage.removeItem('@ShukForrestWedding:userToken')
-      .then(() => {
-        console.log('AsyncStorage.removeItem(..) passed');
-        this.props.navigation.navigate('AuthLoading');
-      })
-      .catch(() => {
-        EventRegister.emit('fetchIsLoading',false);
-        Alert.alert(
-          'Brah..',
-          'Something went wrong. Error code catch20.',
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )
-      })
-    })
-    .catch(() => {
-      EventRegister.emit('fetchIsLoading',false);
-      Alert.alert(
-        'Brah..',
-        'Something went wrong. Error code catch20.',
-        [
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ],
-        { cancelable: false }
-      )
-    })
-  }
 }
-
-
-/** EVENT REGISTER
-
-<Button
-                    rounded
-                    icon={{
-                      type: 'font-awesome',
-                      name: 'leaf'}}
-                    title='Emit'
-                    onPress={(props)=> EventRegister.emit('myCustomEvent','it works!!!')}
-                  />
-                  <Text>
-                    {this.state.data}
-                  </Text>
-
-                  **/

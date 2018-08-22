@@ -21,9 +21,11 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import { EventRegister } from 'react-native-event-listeners';
-import Confetti from 'react-native-confetti';
+import Colors from '../constants/Colors'
 import LoadingOverlay from '../components/LoadingOverlay';
 import ImagePickerExample from '../components/ImagePickerExample';
+
+import { Storage } from 'aws-amplify';
 
 
 export default class Profile extends React.Component {
@@ -41,7 +43,9 @@ export default class Profile extends React.Component {
         plus_one: '',
         food_allergies: '',
         drink_pref: '',
-        id: '',
+        id: 0,
+        email: '',
+        phone: '',
 
         rsvpData: {},
         accessKey: '',
@@ -72,13 +76,23 @@ export default class Profile extends React.Component {
                 fetchIsLoading,
             })
         })
+
+
+        //Expo 2.7 client temp fix - when deviceId is unidentified, use installationId
+
+        let theIdentifier = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+
+        console.log('Expo.Constants.deviceId is ' + Expo.Constants.deviceId);
+        console.log('Expo.Constants.installationId is ' + Expo.Constants.installationId);
+        console.log('Expo.Constants.expoVersion is ' + Expo.Constants.expoVersion);
+
+        this.setState({
+          user_id: theIdentifier
+        });
     }
 
     componentDidMount() {
-      if(this._confettiView) {
-       this._confettiView.startConfetti();
-    }
-
+    
 
       console.log('Profile.js componentDidMount');
 
@@ -86,7 +100,7 @@ export default class Profile extends React.Component {
       
       AsyncStorage.getItem('@ShukForrestWedding:userToken')
       .then((theId) => {
-        let theUrl = 'https://liquidpineapple.com:3000/api/BobaOrders?filter=%7B%22where%22%3A%7B%22user_id%22%3A%22'+ Expo.Constants.deviceId +'%22%7D%7D' + '&access_token=' + theId;
+        let theUrl = 'https://liquidpineapple.com:3000/api/BobaOrders?filter=%7B%22where%22%3A%7B%22user_id%22%3A%22'+ this.state.user_id +'%22%7D%7D' + '&access_token=' + theId;
         let theMethod = 'GET';
         let theHeaders = {
           'Accept': 'application/json',
@@ -116,6 +130,8 @@ export default class Profile extends React.Component {
             food_allergies: rsvpData.food_allergies,
             drink_pref: rsvpData.drink_pref,
             id: rsvpData.id,
+            email: rsvpData.email,
+            phone: rsvpData.phone
           })
 
           console.log('state is ' + JSON.stringify(this.state));
@@ -134,9 +150,7 @@ export default class Profile extends React.Component {
 
     componentWillUnmount() {
       EventRegister.removeEventListener(this.listener);
-      if(this._confettiView) {
-       this._confettiView.startConfetti();
-    }
+
     }
 
   //render
@@ -154,23 +168,6 @@ export default class Profile extends React.Component {
             behavior='position'
             enabled
           >
-            <Confetti 
-                ref={(node) => this._confettiView = node}
-                colors={
-                  [
-                    "rgb(197,179,88)",
-                    "rgb(255,223,0)",
-                    "rgb(250,250,210)"
-                  ]
-                }
-                untilStopped={true}
-                duration={6000}
-                confettiCount={200}
-                timeout={1}
-                size={2}
-                bsize={2}
-              />
-
             <ScrollView>
               <View style={{
                 justifyContent: 'space-around',
@@ -181,8 +178,9 @@ export default class Profile extends React.Component {
                   flexDirection: 'column',
                   alignItems: 'center'
                 }}>
-                  
-                     <ImagePickerExample />
+
+                  <ImagePickerExample />
+
 
                 </View>
                 <View style={{
@@ -190,7 +188,7 @@ export default class Profile extends React.Component {
                 }}>
                   <FormLabel
                     labelStyle={{
-                      color: 'rgba(178,158,7,1.0)'
+                      color: labelColor
                     }}
                   >Name</FormLabel>
                   <FormInput
@@ -200,17 +198,36 @@ export default class Profile extends React.Component {
                   />
                   <FormLabel
                     labelStyle={{
-                      color: 'rgba(178,158,7,1.0)'
+                      color: labelColor
                     }}
-                  >Your Date</FormLabel>
+                  >How do you know us?</FormLabel>
                   <FormInput
-                  placeholder="Original Guest or Plus One's Name"
+                  placeholder="e.g. Nick's date, Barrel Room Crew"
                   onChangeText={(text) => this.setState({plus_one: text})}
                   value={this.state.plus_one}
                   />
                   <FormLabel
                     labelStyle={{
-                      color: 'rgba(178,158,7,1.0)'
+                      color: labelColor
+                  }}>Email</FormLabel>
+                  <FormInput
+                  placeholder='jaychou@hkpride.com'
+                  onChangeText={(text) => this.setState({email: text})}
+                  value={this.state.email}
+                  />
+                  <FormLabel
+                    labelStyle={{
+                      color: labelColor
+                  }}>Phone</FormLabel>
+                  <FormInput
+                  placeholder='(808) 422-2222'
+                  onChangeText={(text) => this.setState({phone: text})}
+                  value={this.state.phone}
+                  //keyboardType='number-pad'
+                  />
+                  <FormLabel
+                    labelStyle={{
+                      color: labelColor
                   }}>Food allergies/lifestyle</FormLabel>
                   <FormInput
                   placeholder='We will try to accomodate you!'
@@ -219,7 +236,7 @@ export default class Profile extends React.Component {
                   />
                   <FormLabel
                     labelStyle={{
-                      color: 'rgba(178,158,7,1.0)'
+                      color: labelColor
                   }}>Drink Preferences</FormLabel>
                   <FormInput
                   placeholder='e.g. Beer and Old Fashioneds'
@@ -237,11 +254,12 @@ export default class Profile extends React.Component {
                 }}>
                   <Button
                     rounded
+                    large
                     icon={{
                       type: 'font-awesome',
                       name: 'leaf'}}
                     title='Submit'
-                    backgroundColor={this.state.name.length > 0 ? 'rgba(178,158,7,1.0)' : '#999'}
+                    backgroundColor={this.state.name.length > 0 ? Colors.tintColor : Colors.tabIconDefault}
                     onPress={()=> this.putNewInfo(this.state, this.state.accessKey)}
                   />
                   <View style={{
@@ -253,7 +271,7 @@ export default class Profile extends React.Component {
                       <Text
                       style={{
                         fontSize: 14,
-                        color: 'rgba(178,158,7,1.0)'
+                        color: labelColor
                       }}>
                         - or log out
                       </Text>
@@ -278,24 +296,33 @@ export default class Profile extends React.Component {
       let theBody = {};
 
       //If this Guest's device is already in the database, Update info
-      if(x.id){
+      if(x.id>0){
         theBody = JSON.stringify({
           'name': x.name,
-          'user_id': Expo.Constants.deviceId,
+          'user_id': x.user_id,
           'plus_one': x.plus_one,
           'drink_pref': x.drink_pref,
           'food_allergies': x.food_allergies,
-          'id' : x.id
+          'id' : x.id,
+          'email' : x.email,
+          'phone' : x.phone
         });
       }
       //Else Create it 
-      else theBody = JSON.stringify({
+      else {
+        console.log('no id detected, theBody will be set up without id to PUT');
+        console.log('user_id is ' + Expo.Constants.deviceId);
+
+        theBody = JSON.stringify({
           'name': x.name,
-          'user_id': Expo.Constants.deviceId,
+          'user_id': x.user_id,
           'plus_one': x.plus_one,
           'drink_pref': x.drink_pref,
-          'food_allergies': x.food_allergies
-      })
+          'food_allergies': x.food_allergies,
+          'email' : x.email,
+          'phone' : x.phone,
+        })
+      }
 
       //debug
       console.log('theBody is ' + JSON.stringify(theBody));
@@ -310,6 +337,8 @@ export default class Profile extends React.Component {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         };
+
+        console.log('the PUT is ' + url);
 
         EventRegister.emit('fetchIsLoading',true);
 
@@ -335,7 +364,7 @@ export default class Profile extends React.Component {
            else {
             Alert.alert(
               'Brahh..',
-              'Something went wrong.  Try again.',
+              'Something went wrong.  Try again. code:'+response.status,
               [
                 {text: 'OK', onPress: () => console.log('OK Pressed')},
               ],
@@ -351,7 +380,7 @@ export default class Profile extends React.Component {
           console.log('catch() was triggered');
           Alert.alert(
               'Brahh..',
-              'Something went wrong.  Try again.',
+              'Something went wrong.  Try again. code:catch',
               [
                 {text: 'OK', onPress: () => console.log('OK Pressed')},
               ],
@@ -385,7 +414,7 @@ export default class Profile extends React.Component {
           EventRegister.emit('fetchIsLoading',false);
           Alert.alert(
             'Brah..',
-            'Something went wrong. Error code responseNot204',
+            'Something went wrong. code:'+response.status,
             [
               {text: 'OK', onPress: () => console.log('OK Pressed')},
             ],
@@ -416,7 +445,7 @@ export default class Profile extends React.Component {
         EventRegister.emit('fetchIsLoading',false);
         Alert.alert(
           'Brah..',
-          'Something went wrong. Error code catch20.',
+          'Something went wrong. code:catch',
           [
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ],
@@ -428,7 +457,7 @@ export default class Profile extends React.Component {
       EventRegister.emit('fetchIsLoading',false);
       Alert.alert(
         'Brah..',
-        'Something went wrong. Error code catch20.',
+        'Something went wrong. code:catch',
         [
           {text: 'OK', onPress: () => console.log('OK Pressed')},
         ],
@@ -437,6 +466,8 @@ export default class Profile extends React.Component {
     })
   }
 }
+
+const labelColor = Colors.tintColor;
 
 
 /** EVENT REGISTER
@@ -454,3 +485,30 @@ export default class Profile extends React.Component {
                   </Text>
 
                   **/
+
+/*** CONFETTI
+
+
+  //componentDidMount()
+    if(this._confettiView) {
+       this._confettiView.startConfetti();
+
+  //render()
+    <Confetti 
+      ref={(node) => this._confettiView = node}
+      colors={
+        [
+          "rgb(245,173,236)",
+          "rgb(255,223,0)",
+          "rgb(250,250,210)"
+        ]
+      }
+      untilStopped={true}
+      duration={6000}
+      confettiCount={200}
+      timeout={1}
+      size={2}
+      bsize={2}
+    />
+
+***/

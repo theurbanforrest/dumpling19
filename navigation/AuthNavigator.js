@@ -50,7 +50,7 @@ export default class AuthNavigator extends React.Component {
     };
     let theCredentials = {
       "username":"forrest",
-      "password":thePassword
+      "password": thePassword.toLowerCase()
     };
 
     EventRegister.emit('fetchIsLoading',true);
@@ -149,46 +149,36 @@ export default class AuthNavigator extends React.Component {
       console.log('Start render of AuthNavigator.js');
 
       return (
+        <View style={{
+          position: 'relative'
+        }}>
+        <View style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}>
+            <Image source={require('../assets/images/bg-piney.png')}
+            />
+          </View>
         <KeyboardAvoidingView style={{
-            backgroundColor: 'white',
-            flex: 1,
+            backgroundColor: 'transparent',
+            //flex: 1,
             flexDirection: 'column',
-            justifyContent: 'center',
             paddingLeft: '3%',
             paddingRight: '3%',
-
+            paddingTop: '20%',
+            height: '100%'
           }}
           behavior='position'
           enabled
         >
-
-          <View style={{
-            justifyContent: 'space-between',
-            //backgroundColor: 'magenta', //debug
-
-          }}>
+          <ScrollView>
             <View style={{
               alignItems: 'center',
-              //backgroundColor: 'green'  //debug
+              justifyContent: 'space-around'
             }}>
-
-            <Confetti 
-                ref={(node) => this._confettiView = node}
-                colors={
-                  [
-                    "rgb(197,179,88)",
-                    "rgb(255,223,0)",
-                    "rgb(250,250,210)"
-                  ]
-                }
-                untilStopped={true}
-                duration={6000}
-                confettiCount={200}
-                timeout={1}
-                size={2}
-                bsize={2}
-              />
-
               <Image
                 style={{
                    paddingVertical: 30,
@@ -197,14 +187,9 @@ export default class AuthNavigator extends React.Component {
                    borderRadius: 100
                  }}
                  resizeMode='cover'
-                 source={{
-                  uri: 'https://forrestching.com/wedding19/assets/engaged.png'
-                 }}
+                 source={require('../assets/images/engaged.png')}
                  onPress={() => console.log('this state is ' + JSON.stringify(this.state))}
                />
-
-              
-
                <Text style={{
                 fontFamily: 'Futura',
                 fontSize: 24,
@@ -212,38 +197,48 @@ export default class AuthNavigator extends React.Component {
                 paddingBottom: 20
                }}>
                #ShukForrestWedding
+                <Text style={{
+                  color: '#999',
+                  fontFamily: 'Futura',
+                  fontSize: 12,
+                  paddingTop: 20,
+                  paddingBottom: 20
+                 }}>
+                    (Beta)
+                 </Text>
                </Text>
-             </View>
-            <View style={{
-              //backgroundColor: 'blue' //debug
-            }}>
-              <FormLabel
-                labelStyle={{
-                  color: 'rgba(178,158,7,1.0)'
-                }}
-              >Access Key</FormLabel>
-                <FormInput
-                placeholder='Enter Access Key'
-                onChangeText={(text) => this.setState({
-                  accessKeyInput: text
-                })}
-                value={this.state.accessKeyInput}
-                />
             </View>
             <View style={{
               paddingTop: 20,
               paddingBottom: 20
             }}>
-            <Button
-              large
-              rounded
-              icon={{
-                type: 'font-awesome',
-                name: 'leaf'}}
-              title='Submit'
-              onPress={()=> this.loginAttempt(this.state.theName,this.state.accessKeyInput,'XYZ123')}
-              backgroundColor={ this.state.accessKeyInput.length > 0 ? 'rgba(178,158,7,1.0)' : '#999'}
-            />
+              <FormLabel
+                labelStyle={{
+                  color: labelColor
+                }}
+              >Access Key</FormLabel>
+              <FormInput
+              placeholder='Enter Access Key'
+              onChangeText={(text) => this.setState({
+                accessKeyInput: text
+              })}
+              secureTextEntry={true}
+              value={this.state.accessKeyInput}
+              />
+              <View style={{
+                paddingTop: '3%'
+              }}>
+                <Button
+                  large
+                  rounded
+                  icon={{
+                    type: 'font-awesome',
+                    name: 'leaf'}}
+                  title='Submit'
+                  onPress={()=> this.loginAttempt(this.state.theName,this.state.accessKeyInput,'XYZ123')}
+                  backgroundColor={ this.state.accessKeyInput.length > 0 ? labelColor : '#999'}
+                />
+              </View>
             </View>
             <View style={{
               flexDirection: 'column',
@@ -265,14 +260,13 @@ export default class AuthNavigator extends React.Component {
                 Copyright 2018 • Honolulu • New York
               </Text>
             </View>
-          </View>
-
-
-          <LoadingOverlay
-            isVisible={this.state.fetchIsLoading}
-            onCancelPress={() => console.log('onCancelPress')}
-           />
-          </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+        <LoadingOverlay
+          isVisible={this.state.fetchIsLoading}
+          onCancelPress={() => console.log('onCancelPress')}
+         />
+      </View>
       );
   }
 
@@ -287,3 +281,29 @@ export default class AuthNavigator extends React.Component {
     })
   }
 }
+
+const labelColor = 'green';
+
+
+
+/*** Removed Confetti
+
+  <Confetti 
+                ref={(node) => this._confettiView = node}
+                colors={
+                  [
+                    "rgb(245,173,236)",
+                    "rgb(255,223,0)",
+                    "rgb(250,250,210)"
+                  ]
+                }
+                untilStopped={true}
+                duration={6000}
+                confettiCount={200}
+                timeout={1}
+                size={2}
+                bsize={2}
+              />
+
+
+***/
