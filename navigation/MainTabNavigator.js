@@ -9,22 +9,24 @@ import SuperMap from '../screens/SuperMap';
 import Profile from '../screens/Profile';
 import EventCalendar from '../screens/EventCalendar';
 import PostInitiator from '../screens/PostInitiator';
-import PostMediaEditor from '../screens/PostMediaEditor';
+import PostMediaEditor from '../components/PostMediaEditor';
 
 
 const HomeFeedStack = createStackNavigator({
-  Home: HomeFeed
+  Home: HomeFeed,
+  Start: PostInitiator,
+  Edit: PostMediaEditor
 })
 
 const EventCalendarStack = createStackNavigator({
   Calendar: EventCalendar,
 })
 
-const PostStack = createStackNavigator({
+/* const PostStack = createStackNavigator({
   Start: PostInitiator,
   Edit: PostMediaEditor,
 
-})
+}) */
 
 const SuperMapStack = createStackNavigator({
   Map: SuperMap,
@@ -56,16 +58,6 @@ EventCalendarStack.navigationOptions = {
   ),
 }
 
-PostStack.navigationOptions = {
-  tabBarLabel: '',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? `ios-add-circle${focused ? '' : '-outline'}` : 'md-add-outline'}
-    />
-  ),
-}
-
 SuperMapStack.navigationOptions = {
   tabBarLabel: 'Map',
   tabBarIcon: ({ focused }) => (
@@ -81,7 +73,7 @@ ProfileStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-happy${focused ? '' : '-outline'}` : 'md-happy'}
+      name={Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options'}
     />
   ),
 }
@@ -91,7 +83,6 @@ export default createBottomTabNavigator(
   {
     HomeFeedStack,
     EventCalendarStack,
-    //PostStack,
     SuperMapStack,
     ProfileStack
   },

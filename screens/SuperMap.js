@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Image,
+  StyleSheet
 } from 'react-native';
 import {
   Button
@@ -13,6 +14,9 @@ import {
 } from 'expo';
 
 import CoreMapMarkers from '../constants/CoreMapMarkers';
+import Colors from '../constants/Colors';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class SuperMap extends React.Component {
   static navigationOptions = {
@@ -32,61 +36,91 @@ export default class SuperMap extends React.Component {
 
     render() {
 
+    const styles = StyleSheet.create({
+      actionButtonIcon: {
+          fontSize: 20,
+          height: 22,
+          color: 'white',
+      },
+    });
+
     return(
-      <MapView
-        style={{ flex: 1 }}
-        initialRegion={{
-          latitude: 34.080397,
-          longitude: -118.067417,
-          latitudeDelta: 144.0,
-          longitudeDelta: 144.0,
-        }}
-      >
-   
-        //Data moved to CoreMapMarkers for reference
+      <View style={{
+        flex: 1
+      }}>
+        <MapView
+          style={{
+            flex: 1,
+            zIndex: -1
+          }}
+          initialRegion={{
+            latitude: 21.316714,
+            longitude: -157.820200,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          }}
+        >
 
-        /* ---- CoreMapMarkers via mapping ---- */
+          //Data moved to CoreMapMarkers for reference
 
-          {
+          /* ---- CoreMapMarkers via mapping ---- */
 
-              //import CoreMapMarkers
-              CoreMapMarkers.map( (marker) => (
-                  <MapView.Marker
-                    key={marker.lat}
-                    coordinate={{
-                      latitude: marker.lat,
-                      longitude: marker.long
-                    }}
-                    pinColor={marker.pinColor}
-                    onPress={() => console.log(marker.callOut.h1 + ' pressed')}
-                  >
-                    <MapView.Callout
-                      tooltip={false}
-                      onPress={() => console.log(marker.callOut.cap1 + ' pressed')}
-                      style={{
-                        //width: 150
+            {
+
+                //import CoreMapMarkers
+                CoreMapMarkers.map( (marker) => (
+                    <MapView.Marker
+                      key={marker.lat}
+                      coordinate={{
+                        latitude: marker.lat,
+                        longitude: marker.long
                       }}
+                      pinColor={marker.pinColor}
+                      onPress={() => console.log(marker.callOut.h1 + ' pressed')}
                     >
-                      <View>
-                        <Text style={{
-                          color: 'gray'
+                      <MapView.Callout
+                        tooltip={false}
+                        onPress={() => console.log(marker.callOut.cap1 + ' pressed')}
+                        style={{
+                          width: 200
+                        }}
+                      >
+                        <View style={{
+                          width: '100%'
                         }}>
-                          {marker.callOut.h1}
-                        </Text>
-                        <Text style={{
-                          color: 'gray'
-                        }}>
-                          {marker.callOut.cap1}
-                        </Text>
-                      </View>
-                    </MapView.Callout>
-                  </MapView.Marker>
+                          <Text style={{
+                            color: Colors.primaryText,
+                            fontWeight: 'bold'
+                          }}>
+                            {marker.callOut.h1}
+                          </Text>
+                          <Text style={{
+                            color: 'gray'
+                          }}>
+                            {marker.callOut.cap1}
+                          </Text>
+                        </View>
+                      </MapView.Callout>
+                    </MapView.Marker>
+                  )
                 )
-              )
-          }
+            }
 
-        /* ---- End CoreMapMarkers ---- */
-      </MapView>
+          /* ---- End CoreMapMarkers ---- */
+        </MapView>
+
+        /*
+        <ActionButton buttonColor={Colors.tintColor}>
+          <ActionButton.Item buttonColor='#1abc9c' title="Oahu" onPress={() => console.log('howzit')}>
+            <Icon name="search" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#1abc9c' title="#shukforrestadventuretime" onPress={() => console.log('howzit')}>
+            <Icon name="search" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
+        */
+      </View> 
+
     )
   }
 }

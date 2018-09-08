@@ -1,9 +1,16 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
-import { Camera, Permissions, FileSystem } from 'expo';
+import { 
+  Camera,
+  Permissions,
+  FileSystem,
+  ImagePicker,
+  ImageManipulator
+} from 'expo';
 import { Icon } from 'react-native-elements';
 import { EventRegister } from 'react-native-event-listeners';
 import Colors from '../constants/Colors';
+
 
 export default class CameraExample extends React.Component {
   state = {
@@ -82,10 +89,26 @@ export default class CameraExample extends React.Component {
                     alignItems: 'center',
                     padding: 20
                   }}
-                  onPress={this.takePicture}>
+                  //onPress={this.takePicture}>
+                  onPress={() => this._takePictureWithCamera()}
+                >
                   <Icon
                     name='ios-camera'
                     type='ionicon'
+                    color='white'
+                    size={36}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    alignSelf: 'flex-end',
+                    alignItems: 'center',
+                    padding: 20
+                  }}
+                  onPress={this._pickFromLibrary}>
+                  <Icon
+                    name='ellipsis-h'
+                    type='font-awesome'
                     color='white'
                     size={36}
                   />
@@ -104,17 +127,17 @@ export default class CameraExample extends React.Component {
   takePicture = () => {
     console.log('takePicture')
 
-    if (this.camera) {
+      if (this.camera) {
       this.camera.takePictureAsync({ 
         //base64: true,
         //onPictureSaved: this.onPictureSaved 
+
       })
       .then((photoPromise) => {
 
         console.log('takePictureAsync called, photoPromise is ' + JSON.stringify(photoPromise))
 
         EventRegister.emit('pictureTaken', photoPromise);
-
         console.log('emitted pictureTaken');
 
       });
@@ -124,5 +147,38 @@ export default class CameraExample extends React.Component {
     else console.log('this.camera is null');
   };
 
+  _takePictureWithCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({});
+
+    EventRegister.emit('pictureTaken', result);
+    console.log('emitted pictureTaken');
+  }
+
+  _pickFromLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+    console.log('the result.uri is ' + result.uri); 
+
+      const manipResult = await ImageManipulator.manipulate(
+        result.uri,
+        [{ 
+          resize: {
+            width: 600
+          }
+        }],
+        { format: 'jpeg' }
+      );
+
+      EventRegister.emit('pictureTaken', manipResult);
+      console.log('emitted pictureTaken');
+
+      //const thePath = await fetch(manipResult.uri);
+      //const theBlob = await thePath.blob();
+      
+  }
 
 }

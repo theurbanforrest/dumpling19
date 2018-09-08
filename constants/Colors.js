@@ -1,13 +1,19 @@
 const tintColor = 'green';
+const tintColorAccent = 'green';
+const inactiveColor = '#ccc';
+const errorBackground = 'coral';
+const inactiveColorDark = '#999';
+const inactiveColorLight = '#D8D8D8';
 
 export default {
   tintColor,
-  inactiveColor: '#999',
+  inactiveColor,
+  tintColorAccent,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,
   
   tabBar: '#fefefe',
-  errorBackground: 'red',
+  errorBackground,
   errorText: '#fff',
   warningBackground: '#EAEB5E',
   warningText: '#666804',
@@ -17,8 +23,8 @@ export default {
   primaryText: '#333',
   primaryBackground: 'white',
 
-  secondaryText: '#333',
-  secondaryBackground: 'gold',
+  secondaryText: 'gold',
+  secondaryBackground: 'lightgreen',
 
   h1: {
     fontFamily: 'Futura-Bold',
@@ -27,12 +33,50 @@ export default {
 
   h2: {
     fontFamily: 'Futura',
-    fontSize: 24
+    fontSize: 24,
+    color: tintColor
   },
+
+  h2Reverse: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    color: inactiveColor
+  },
+
+  h2ReverseDark: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    color: inactiveColorDark
+  },
+
+  h2Accent: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    color: tintColorAccent
+  },
+
+  h2Error: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    color: errorBackground
+  },
+
 
   h3: {
     fontFamily: 'Futura',
-    fontSize: 12
-  }
+    fontSize: 18
+  },
+
+  h3Accent: {
+    fontFamily: 'Futura',
+    fontSize: 18,
+    color: tintColorAccent
+  },
+
+  h3Reverse: {
+    fontFamily: 'Futura',
+    fontSize: 18,
+    color: inactiveColor
+  },
 
 };

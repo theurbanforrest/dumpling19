@@ -49,8 +49,28 @@ export default
         h1: "The Big Day @ Nutridge Estate",
         cap1: "3280 Round Top Dr.  Honolulu, HI 96822"
       }
-    }
+    },
+    {
+      lat: 21.284270,
+      long: -157.838591,
+      pinColor: secColor,
+      callOut: {
+        h1: "Ilikai Condos",
+        cap1: "Great AirBnB condos, also has hotel rooms. Beachy vibes, well priced"
+      }
+    },
+    {
+      lat: 21.282335, 
+      long: -157.837535,
+      pinColor: secColor,
+      callOut: {
+        h1: "Hilton Hawaiian Village",
+        cap1: "Resort accomodations with everything you'd need. Upscale choice."
+      }
+    },
+
   ];
+
 
 
 /*** SuperMap.render() marker data here for ref

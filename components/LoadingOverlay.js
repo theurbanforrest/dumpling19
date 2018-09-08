@@ -11,6 +11,8 @@ import {
   Badge
 } from 'react-native-elements'
 
+import Piney from '../helpers/Piney';
+
 /*-- THE COMPONENT --*/
 const LoadingOverlay = (props: LoadingOverlayProps) => {
 
@@ -68,7 +70,7 @@ const LoadingOverlay = (props: LoadingOverlayProps) => {
             color: '#97ACB3',
             fontSize: 24,
           }}
-          onPress={onCancelPress}
+          onPress={() => Piney.aloha()}
         />
       </View>
     )
