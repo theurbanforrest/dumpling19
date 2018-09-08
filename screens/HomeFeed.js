@@ -195,10 +195,10 @@ export default class HomeFeed extends React.Component {
           </ScrollView>
 
           <ActionButton buttonColor={Colors.tintColor}>
-            <ActionButton.Item buttonColor='#1abc9c' title="+ From Camera" onPress={() => this._takePictureWithCamera()}>//{() => this.props.navigation.navigate('Start')}>
+            <ActionButton.Item buttonColor='#1abc9c' title="+ Snap Piccy" onPress={() => this._takePictureWithCamera()}>//{() => this.props.navigation.navigate('Start')}>
               <Icon name="camera" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#1abc9c' title="+ From Phone" onPress={() => this._pickFromLibrary()}>//{() => this.props.navigation.navigate('Start')}>
+            <ActionButton.Item buttonColor='#1abc9c' title="+ Add From Phone" onPress={() => this._pickFromLibrary()}>//{() => this.props.navigation.navigate('Start')}>
               <Icon name="image" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>

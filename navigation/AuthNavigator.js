@@ -30,7 +30,7 @@ export default class AuthNavigator extends React.Component {
       super(props);
 
       this.state = {
-        theName: 'forrest',
+        userNameInput: '',
         accessKeyInput: '',
 
         data: 'no data this is a string',
@@ -49,7 +49,7 @@ export default class AuthNavigator extends React.Component {
       'Content-Type': 'application/json',
     };
     let theCredentials = {
-      "username":"forrest",
+      "username": theName.toLowerCase(),
       "password": thePassword.toLowerCase()
     };
 
@@ -216,6 +216,19 @@ export default class AuthNavigator extends React.Component {
                 labelStyle={{
                   color: labelColor
                 }}
+              >User Name</FormLabel>
+              <FormInput
+              placeholder='Enter User Name'
+              onChangeText={(text) => this.setState({
+                userNameInput: text
+              })}
+              secureTextEntry={false}
+              value={this.state.userNameInput}
+              />
+              <FormLabel
+                labelStyle={{
+                  color: labelColor
+                }}
               >Access Key</FormLabel>
               <FormInput
               placeholder='Enter Access Key'
@@ -235,7 +248,7 @@ export default class AuthNavigator extends React.Component {
                     type: 'font-awesome',
                     name: 'leaf'}}
                   title='Submit'
-                  onPress={()=> this.loginAttempt(this.state.theName,this.state.accessKeyInput,'XYZ123')}
+                  onPress={()=> this.loginAttempt(this.state.userNameInput,this.state.accessKeyInput,'XYZ123')}
                   backgroundColor={ this.state.accessKeyInput.length > 0 ? labelColor : '#999'}
                 />
               </View>
