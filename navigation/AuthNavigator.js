@@ -17,8 +17,8 @@ import {
   FormLabel
 } from 'react-native-elements';
 import { EventRegister } from 'react-native-event-listeners';
-import Confetti from 'react-native-confetti';
 import LoadingOverlay from '../components/LoadingOverlay';
+import Colors from '../constants/Colors';
 
 export default class AuthNavigator extends React.Component {
 
@@ -30,7 +30,7 @@ export default class AuthNavigator extends React.Component {
       super(props);
 
       this.state = {
-        userNameInput: '',
+        userNameInput: 'forrest',
         accessKeyInput: '',
 
         data: 'no data this is a string',
@@ -75,7 +75,12 @@ export default class AuthNavigator extends React.Component {
               'Oops!',
               'You entered an unauthorized access key',
               [
-                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                {text: 'OK', onPress: () => {
+                  console.log('OK Pressed');
+                  this.setState({
+                    fetchIsLoading: false
+                  })
+                }},
               ],
               { cancelable: false }
             )
@@ -90,7 +95,7 @@ export default class AuthNavigator extends React.Component {
 
       if(theId){
         console.log('EventRegister.emit(..)');
-        EventRegister.emit('setAccessKey', theId);
+        //EventRegister.emit('setAccessKey', theId);
         console.log('AsyncStorage.setItem(..)');
         AsyncStorage.setItem('@ShukForrestWedding:userToken', theId);
 
@@ -99,14 +104,14 @@ export default class AuthNavigator extends React.Component {
       }
       else {
         console.log('theId was undefined');
-        EventRegister.emit('fetchIsLoading',false);
+        //EventRegister.emit('fetchIsLoading',false);
         return theId;
       }
     })
     //If there was an error, catch() it
     .catch(() => {
       console.log('catch() was triggered');
-      EventRegister.emit('fetchIsLoading',false);
+      //EventRegister.emit('fetchIsLoading',false);
     })
   }
 
@@ -198,7 +203,7 @@ export default class AuthNavigator extends React.Component {
                }}>
                #ShukForrestWedding
                 <Text style={{
-                  color: '#999',
+                  color: Colors.inactiveColor,
                   fontFamily: 'Futura',
                   fontSize: 12,
                   paddingTop: 20,
@@ -212,26 +217,14 @@ export default class AuthNavigator extends React.Component {
               paddingTop: 20,
               paddingBottom: 20
             }}>
+              
               <FormLabel
                 labelStyle={{
                   color: labelColor
                 }}
-              >User Name</FormLabel>
+              >Password</FormLabel>
               <FormInput
-              placeholder='Enter User Name'
-              onChangeText={(text) => this.setState({
-                userNameInput: text
-              })}
-              secureTextEntry={false}
-              value={this.state.userNameInput}
-              />
-              <FormLabel
-                labelStyle={{
-                  color: labelColor
-                }}
-              >Access Key</FormLabel>
-              <FormInput
-              placeholder='Enter Access Key'
+              placeholder='Enter Password'
               onChangeText={(text) => this.setState({
                 accessKeyInput: text
               })}
@@ -254,8 +247,9 @@ export default class AuthNavigator extends React.Component {
               </View>
             </View>
             <View style={{
+              flex: 1,
               flexDirection: 'column',
-              justifyContent: 'flex-start',
+              justifyContent: 'flex-end',
               alignItems: 'center'
             }}>
               <Text
@@ -277,7 +271,7 @@ export default class AuthNavigator extends React.Component {
         </KeyboardAvoidingView>
         <LoadingOverlay
           isVisible={this.state.fetchIsLoading}
-          onCancelPress={() => console.log('onCancelPress')}
+          onCancelPress={() => this.setState({ fetchIsLoading: false })}
          />
       </View>
       );
@@ -295,7 +289,7 @@ export default class AuthNavigator extends React.Component {
   }
 }
 
-const labelColor = 'green';
+const labelColor = Colors.tintColor;
 
 
 
@@ -318,5 +312,23 @@ const labelColor = 'green';
                 bsize={2}
               />
 
+
+***/
+
+/*** Removed User Name
+
+<FormLabel
+                    labelStyle={{
+                      color: labelColor
+                    }}
+                  >User Name</FormLabel>
+                  <FormInput
+                  placeholder='Enter User Name'
+                  onChangeText={(text) => this.setState({
+                    userNameInput: text
+                  })}
+                  secureTextEntry={true}
+                  value={this.state.userNameInput}
+                  />
 
 ***/

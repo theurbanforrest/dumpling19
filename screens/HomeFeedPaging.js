@@ -17,14 +17,10 @@ import {
 } from 'react-native';
 import {
   Button,
-  FormLabel,
-  FormInput,
-  Avatar
+  Avatar,
 } from 'react-native-elements';
 import { 
-  WebBrowser,
-  ImagePicker,
-  ImageManipulator
+
 } from 'expo';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -32,7 +28,6 @@ import Colors from '../constants/Colors';
 
 import { MonoText } from '../components/StyledText';
 import { EventRegister } from 'react-native-event-listeners';
-import LoadingOverlay from '../components/LoadingOverlay';
 import FeedItem from '../components/FeedItem'; 
 import { Storage, API } from 'aws-amplify';
 import HomeFeedItems from '../constants/HomeFeedItems';
@@ -53,7 +48,11 @@ export default class HomeFeed extends React.Component {
       this.state = {
         refreshing: false,
         fetchIsLoading: false,
-        awsPicture: 'https://randomuser.me/api/portraits/women/59.jpg'
+        awsPicture: 'https://randomuser.me/api/portraits/women/59.jpg',
+        selected: (new Map(): Map<string, boolean>),
+        feedItems: [],
+        endOfFeedIndex: 0,
+        fetchSize: 2,
       }
     }
 
@@ -102,22 +101,17 @@ export default class HomeFeed extends React.Component {
         let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
         let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
      
-        let theBobaOrder = await this._getBobaOrderByUserId(theToken,theUserId);
-
         this.setState({
           access_token: theToken,
-          user_id: theUserId,
-          boba_order: theBobaOrder,
+          user_id: theUserId
         });
-
-        console.log('debug -- HomeFeed componentDidMount this.state is ' + JSON.stringify(this.state));
 
         
     }
 
     async componentDidMount() {
 
-      await this._getRiderComments()
+      await this._getRiderComments(this.state.fetchSize)
       .then((response) => {
         this.setState({
           feedItems: response
@@ -126,16 +120,12 @@ export default class HomeFeed extends React.Component {
       })
       .catch((err) => console.log(err));
 
-      //console.log('debug -- HomeFeed componentDidMount() this.state.feedItems is ' + JSON.stringify(this.state.feedItems));
-
       try{
         await this._checkIfHasBobaOrder(this.state.access_token,this.state.user_id);
       }
       catch(err){
-        //console.log('debug -- HomeFeed componentDidMount() _checkIfHasBobaOrder() catch err ' + err);
+        console.log('debug -- HomeFeed componentDidMount() _checkIfHasBobaOrder() catch err ' + err);
       }
-
-      //await this._listBucketObjects();
     }
       
   //render
@@ -156,55 +146,46 @@ export default class HomeFeed extends React.Component {
             color: 'white',
         },
       });
+
+      console.log('debug -- HomeFeedPaging render() this.state.feedItems ' + JSON.stringify(this.state.feedItems));
+
     
       //Else free to proceed
       return(
         <View style={{
           position: 'relative'
         }}>
-          <ScrollView style={{
-            flexDirection: 'column',
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-            />
-          }
-          >
 
+
+          <FlatList
+            data={this.state.feedItems}
+            renderItem={ ({ item }) => (
+              <FeedItem
+                key={item.id}
+                accessToken={this.state.access_token}
+                editable={item.user_id == this.state.user_id ? true : false}
+                userName={item.user_name}
+                userId={item.user_id}
+                postImage={encodeURI(PineyConstants.postPicturePrefix + item.id + '.jpeg')}
+                postCopy={item.comment_body}
+                onActionPress={() => this.props.navigation.navigate('Edit',{
+                    item
+                  })
+                }
+                addCommentPress={() => this.props.navigation.navigate('Comment',{
+                  item
+                })}
+              />
+            )}
+            keyExtractor={item => encodeURI('stringMe-' + item.id)}
+            onEndReached={() => this._getRiderComments(this.state.fetchSize)}
+          />
+
+          >
+          /***
           {
 
             !this.state.refreshing && this.state.feedItems &&
-
-
-              <FlatList
-                data={this.state.feedItems}
-                renderItem={ ({ item }) => (
-                  <FeedItem
-                    key={item.id}
-                    accessToken={this.state.access_token}
-                    editable={item.user_id == this.state.boba_order[0].id ? true : false} 
-                    userName={item.user_name}
-                    userId={item.user_id}
-                    postId={item.id}
-                    postImage={encodeURI(PineyConstants.postPicturePrefix + item.id + '.jpeg')}
-                    postCopy={item.comment_body}
-                    onActionPress={() => this.props.navigation.navigate('Edit',{
-                        item
-                      })
-                    }
-                    addCommentPress={() => this.props.navigation.navigate('Comment',{
-                      item
-                    })}
-                    firstComment={this._getLastCommentEvent(item.id)}
-                  />
-                )}
-                keyExtractor={item => encodeURI('stringMe-' + item.id)}
-                //onEndReached={() => this._getRiderComments(this.state.fetchSize)}
-              />
-
-              /**
 
               this.state.feedItems.map( (x) => (
 
@@ -225,15 +206,16 @@ export default class HomeFeed extends React.Component {
                     })}
                   /> 
               ))
-              **/
-
           }  
-          </ScrollView>
+          ***/
+
+
+
           <ActionButton buttonColor={Colors.tintColor}>
-            <ActionButton.Item buttonColor={Colors.secondaryBackground} title="+ Smile!" onPress={() => this._takePictureWithCamera()}>
+            <ActionButton.Item buttonColor='#1abc9c' title="+ Smile!" onPress={() => this._takePictureWithCamera()}>
               <Icon name="camera" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor={Colors.secondaryBackground} title="+ Add Memory" onPress={() => this._pickFromLibrary()}>
+            <ActionButton.Item buttonColor='#1abc9c' title="+ Add Memory" onPress={() => this._pickFromLibrary()}>
               <Icon name="image" style={styles.actionButtonIcon} />
             </ActionButton.Item>
           </ActionButton>
@@ -257,23 +239,33 @@ export default class HomeFeed extends React.Component {
     
   }
 
-  _listBucketObjects = async () => {
-
-    Storage.list('')
-    .then(result => console.log('debug -- HomeFeed _listBucketObjects() returned ' + JSON.stringify(result)))
-    .catch(err => console.log(err));
+  _getRiderCommentsCountByPartition = async () => {
 
   }
 
-  _getRiderComments = async () => {
+  _getRiderComments = async (fetchSize) => {
+
+    let x = fetchSize ? fetchSize : 1;
+
+    let z = this.state.endOfFeedIndex + fetchSize;
+
+    console.log('debug -- HomeFeedPaging _getRiderComments() z is ' + z);
 
     let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
-    let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
-     
-    let theGet = await Piney.riderCommentsGetByPartition(theToken,{});
+
+    let theGet = await Piney.riderCommentsGetByPartitionPaginate(theToken,{},fetchSize,this.state.endOfFeedIndex);
     let theGetResponse = await theGet.json();
 
-    //console.log('debug -- HomeFeed _getRiderComments() theGetResponse is ' + JSON.stringify(theGetResponse));
+    console.log('debug -- HomeFeed _getRiderComments() theGetResponse is ' + JSON.stringify(theGetResponse));
+    
+    this.setState({
+      feedItems: [...this.state.feedItems, theGetResponse],
+      endOfFeedIndex: this.state.endOfFeedIndex + fetchSize
+    })
+
+    console.log('debug -- HomeFeedPaging _getRiderComments this.state.feedItems is ' + JSON.stringify(this.state.feedItems));
+    console.log('debug -- HomeFeedPaging _getRiderComments this.state.endOfFeedIndex is ' + JSON.stringify(this.state.endOfFeedIndex));
+
     return theGetResponse;
 
   }
@@ -292,8 +284,8 @@ export default class HomeFeed extends React.Component {
   _takePictureWithCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({});
 
-    //console.log(result);
-    //console.log('the result.uri is ' + result.uri); 
+    console.log(result);
+    console.log('the result.uri is ' + result.uri); 
 
       const manipResult = await ImageManipulator.manipulate(
         result.uri,
@@ -306,7 +298,7 @@ export default class HomeFeed extends React.Component {
       );
 
     EventRegister.emit('pictureTaken', result);
-    //console.log('emitted pictureTaken');
+    console.log('emitted pictureTaken');
   }
 
   _pickFromLibrary = async () => {
@@ -315,8 +307,8 @@ export default class HomeFeed extends React.Component {
       aspect: [4, 3],
     });
 
-    //console.log(result);
-    //console.log('the result.uri is ' + result.uri); 
+    console.log(result);
+    console.log('the result.uri is ' + result.uri); 
 
       const manipResult = await ImageManipulator.manipulate(
         result.uri,
@@ -329,7 +321,7 @@ export default class HomeFeed extends React.Component {
       );
 
       EventRegister.emit('pictureTaken', manipResult);
-      //console.log('emitted pictureTaken');
+      console.log('emitted pictureTaken');
 
       //const thePath = await fetch(manipResult.uri);
       //const theBlob = await thePath.blob();
@@ -343,7 +335,7 @@ export default class HomeFeed extends React.Component {
       try{ a[0].id; }
       catch(e) {
 
-          //console.log('debug -- HomeFeed _checkIfHasBobaOrder catch error ' + e);
+          console.log('debug -- HomeFeed _checkIfHasBobaOrder catch error ' + e);
 
           Alert.alert(
           'Howzit!',
@@ -359,16 +351,5 @@ export default class HomeFeed extends React.Component {
       }
   }
 
-  _getLastCommentEvent = async (theId) => {
-
-    let theGet = await Piney.riderCommentsCommentEventsGet(
-      this.state.access_token,
-      theId
-    );
-
-    //console.log('debug -- HomeFeed _getLastCommentEvent() returns ' + JSON.stringify(theGet));
-
-    return theGet;
-  }
 
 }

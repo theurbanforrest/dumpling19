@@ -16,7 +16,8 @@ import {
   Button,
   FormLabel,
   FormInput,
-  Icon
+  Icon,
+  ListItem
 } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
@@ -112,75 +113,6 @@ export default class Profile extends React.Component {
           theToken: theId
         });
 
-        //let a = await this._getThisBobaOrder();
-        //let b = await this._getThisUserProfile();
-
-      /*** REFACTORED with this._bobaOrdersGetById()
-        console.log('this.state.theToken is ' + this.state.theToken);
-
-      
-        let theUrl = 'https://liquidpineapple.com:3000/api/BobaOrders?filter=%7B%22where%22%3A%7B%22user_id%22%3A%22'+ this.state.user_id +'%22%7D%7D' + '&access_token=' + theId;
-        let theMethod = 'GET';
-        let theHeaders = {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        };
-
-        console.log('theUrl is ' + theUrl);
-
-        EventRegister.emit('fetchIsLoading',true);
-
-      
-        fetch(theUrl,{
-          method: theMethod,
-          headers: theHeaders
-        })
-        .then((response) => {
-          let x = response.json();  /// This is needed to make sure it gets converted before continuing!
-          console.log('x is ' + x);
-          return x;
-        })
-        .then((response) => {
-          let rsvpData = response[0];
-          this.setState({
-            name: rsvpData.name,
-            user_id: rsvpData.user_id,
-            plus_one: rsvpData.plus_one,
-            food_allergies: rsvpData.food_allergies,
-            drink_pref: rsvpData.drink_pref,
-            id: rsvpData.id,
-            email: rsvpData.email,
-            phone: rsvpData.phone,
-            order_accepted: rsvpData.order_accepted
-          })
-          console.log('Profile.js state was set as ' + JSON.stringify(this.state));
-      */
-      /**** REFACTORED with userProfilesGetById()
-          fetch('https://liquidpineapple.com:3000/api/UserProfiles?filter=%7B%22where%22%3A%7B%22user_id%22%3A%22'+ rsvpData.user_id +'%22%7D%7D' + '&access_token=' + this.state.theToken,
-          {
-            method: 'GET',
-            headers: {
-              'Accept' : 'application/json',
-              'Content-Type' : 'application/json'
-            }
-          })
-          .then((response) => response.json())
-          .then((data) => {
-
-            console.log('data is ' + JSON.stringify(data));
-
-            let userProfileData = data[0];
-            this.setState({
-              user_profile_id: userProfileData.id
-            })
-            
-            console.log('userProfileData.id is ' + userProfileData.id);
-          })
-          .catch((err) => {
-            console.log('catch() when fetching UserProfile with code ' + err);
-          })
-      */
-
         EventRegister.emit('fetchIsLoading',false);
       })
       .then(() => console.log('debug -- Profile componentDidMount() this.state is ' + JSON.stringify(this.state)))
@@ -194,6 +126,25 @@ export default class Profile extends React.Component {
       let x = await this._getThisBobaOrder();
       let y = await this._getThisUserProfile();
       let z = await this._getThisUserPicture();
+
+      let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
+      let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+     
+      this.setState({
+        access_token: theToken,
+        user_id: theUserId
+      })
+
+      /***
+      await this._getBobaOrders()
+      .then((response) => {
+        this.setState({
+          feedItems: response
+        });
+        return true;
+      })
+      .catch((err) => console.log(err));
+      ***/
     }
 
     componentWillUnmount() {
@@ -391,7 +342,28 @@ export default class Profile extends React.Component {
                     </TouchableHighlight>
                   </View>
                 </View>
+
+
+              {
+                /***
+
+                !this.state.refreshing && this.state.feedItems &&
+
+                this.state.feedItems.map((item) => (
+                  <ListItem
+                    roundAvatar
+                    //avatar={{uri:l.avatar_url}}
+                    key={item.id}
+                    title={item.name ? item.name : ""}
+                    subtitle={item.drink_pref ? item.plus_one : ""}
+                  />
+                ))
+
+                ***/
+              }
+
               </View>
+
             </ScrollView>
               <LoadingOverlay
                 isVisible={this.state.fetchIsLoading}
@@ -576,15 +548,20 @@ export default class Profile extends React.Component {
     //let theToken = this.state.theToken;
     let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
 
-    let theGet = await Piney.userProfilesGetById(theToken,theUserId);
-      
-    /// Things to do after you get the response
-    let theGetResponse = await theGet.json();
-    this.setState({
-      user_profile_id: theGetResponse[0].id
-    })
+    try {
+      let theGet = await Piney.userProfilesGetById(theToken,theUserId);
+        /// Things to do after you get the response
+      let theGetResponse = await theGet.json();
+      this.setState({
+        user_profile_id: theGetResponse[0].id
+      })
 
-    return theGetResponse;
+      return theGetResponse;
+    }
+    catch(err){
+      console.log('debug -- Profile _getThisUserProfile catch err' + err);
+    }
+
   }
 
   _putThisUserProfile = async () => {
@@ -615,24 +592,39 @@ export default class Profile extends React.Component {
       //let theToken = this.state.theToken;
       let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
 
-      let theGet = await Piney.bobaOrdersGetById(theToken,theUserId);
+      try {
+        let theGet = await Piney.bobaOrdersGetById(theToken,theUserId);
+        console.log('debug -- theGet is ' + JSON.stringify(theGet));
+         // let theGetResponse = theGet.json();
+          let rsvpData = theGet[0];
+
+          let a = rsvpData.name;
+          let b = rsvpData.user_id;
+          let c = rsvpData.plus_one;
+          let d = rsvpData.food_allergies;
+          let e = rsvpData.drink_pref;
+          let f = rsvpData.id;
+          let g = rsvpData.email;
+          let h = rsvpData.phone;
+          let i = rsvpData.order_accepted;
+
+          this.setState({
+              name: a ? a : '',
+              user_id: b ? b : '',
+              plus_one: c ? c : '',
+              food_allergies: d ? d : '',
+              drink_pref: e ? e : '',
+              id: f ? f : '',
+              email: g ? g : '',
+              phone: h ? h : '',
+              order_accepted: i ? i : ''
+            })
+
+      }
+      catch(err){
+        console.log('debug -- Profile _getThisBobaOrder catch err' + err);
+      }
       /// Things to do after you get the response
-
-      console.log('debug -- theGet is ' + JSON.stringify(theGet));
-     // let theGetResponse = theGet.json();
-      let rsvpData = theGet[0];
-
-      this.setState({
-          name: rsvpData.name,
-          user_id: rsvpData.user_id,
-          plus_one: rsvpData.plus_one,
-          food_allergies: rsvpData.food_allergies,
-          drink_pref: rsvpData.drink_pref,
-          id: rsvpData.id,
-          email: rsvpData.email,
-          phone: rsvpData.phone,
-          order_accepted: rsvpData.order_accepted
-        })
 
       console.log('debug -- Profile state is ' + JSON.stringify(this.state))
 
@@ -790,54 +782,24 @@ export default class Profile extends React.Component {
     return(
       <ImagePickerExample
         metaData={this.state}
-        picToShow={encodeURI(PineyConstants.profilePicturePrefix + this.state.id + '.jpeg')}
+        picToShow={this.state.id ? encodeURI(PineyConstants.profilePicturePrefix + this.state.id + '.jpeg') : PineyConstants.defaultProfilePicture}
       />
     )
+  }
+
+  _getBobaOrders= async () => {
+
+    let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
+    let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+     
+    let theGet = await Piney.bobaOrdersGetByPartition(theToken,{});
+    let theGetResponse = await theGet.json();
+
+    console.log('debug -- EventCalendar _getBobaOrders() theGetResponse is ' + JSON.stringify(theGetResponse));
+    return theGetResponse;
+
   }
 }
 
 const labelColor = Colors.tintColor;
 
-
-/** EVENT REGISTER
-
-<Button
-                    rounded
-                    icon={{
-                      type: 'font-awesome',
-                      name: 'leaf'}}
-                    title='Emit'
-                    onPress={(props)=> EventRegister.emit('myCustomEvent','it works!!!')}
-                  />
-                  <Text>
-                    {this.state.data}
-                  </Text>
-
-                  **/
-
-/*** CONFETTI
-
-
-  //componentDidMount()
-    if(this._confettiView) {
-       this._confettiView.startConfetti();
-
-  //render()
-    <Confetti 
-      ref={(node) => this._confettiView = node}
-      colors={
-        [
-          "rgb(245,173,236)",
-          "rgb(255,223,0)",
-          "rgb(250,250,210)"
-        ]
-      }
-      untilStopped={true}
-      duration={6000}
-      confettiCount={200}
-      timeout={1}
-      size={2}
-      bsize={2}
-    />
-
-***/

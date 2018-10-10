@@ -12,6 +12,7 @@ import { Avatar, Badge } from 'react-native-elements';
 
 import { Storage, API } from 'aws-amplify';
 import Piney from '../helpers/Piney';
+import PineyConstants from '../constants/PineyConstants';
 import Buffer from 'buffer';
 import Colors from '../constants/Colors';
 
@@ -62,7 +63,7 @@ export default class ImagePickerExample extends React.Component {
               xlarge
               rounded
               source={{ 
-                uri: this.state.image
+                uri: this.state.image ? this.state.image : PineyConstants.defaultProfilePicture
               }} 
             />
           }

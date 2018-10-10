@@ -31,9 +31,11 @@ export default class FeedItem extends React.Component {
         fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
       }
 
+      //console.log('debug -- FeedItem constructor() this.props is ' + JSON.stringify(this.props))
+
     }
 
-  componentWillMount(){
+  async componentWillMount(){
     let { height, width } = Dimensions.get('window');
 
       this.setState({
@@ -42,10 +44,11 @@ export default class FeedItem extends React.Component {
       });
 
     this._getThePics();
+    this._getLastCommentEvent(this.props.postId);
     
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     Animated.timing(                  // Animate over time
       this.state.fadeAnim,            // The animated value to drive
       {
@@ -60,10 +63,11 @@ export default class FeedItem extends React.Component {
       userNameForDisplay: a
     })
 
+
   }
           
   render(){
-    console.log('FeedItem.render() started');
+    //console.log('FeedItem.render() started');
     let { fadeAnim } = this.state;
 
 		return(
@@ -90,7 +94,7 @@ export default class FeedItem extends React.Component {
                   <Avatar
                     small
                     rounded
-                    source={{ uri: this.state.getProfPic }}
+                    source={{ uri: this.state.user_profile_pic }}
                   />
                   <Text style={{
                     color: textColor,
@@ -112,26 +116,25 @@ export default class FeedItem extends React.Component {
               </View>
               <Image
                 source={{ uri: this.state.getPostImage }}
+                //source={{uri: 'http://shukforrest.com/assets/engaged.png'}}
                 style={{
                 	height: this.state.bestHeight,
+                  //height: 200,
                 	width: this.state.bestWidth,
                  	resizeMode: 'cover'
                 }}
-                onLoadStart={console.log('Image did onLoadStart')}
-                onLoadEnd={console.log('Image did onLoadEnd')}
+                //onLoadStart={console.log('Image did onLoadStart')}
+                //onLoadEnd={console.log('Image did onLoadEnd')}
                 loadingIndicatorSource={require('../assets/images/gray-pine.png')}
               />
-              /* Interactions */
-              <Interactions
-                showHeartAndComment={true}
-                yolo={12}
-              />
+              
               /* Name and Copy Block */
               <View style={{
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'flex-start',
                 padding: '3%',
+                paddingTop: '6%',
                 width: '100%',
               }}>
                   <Text 
@@ -151,22 +154,66 @@ export default class FeedItem extends React.Component {
                     </Text>
                   </Text>
               </View>
+              /* Last Comment */
+
+              {
+                this.state.firstCommentUserName &&
+                
+                <View style={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                padding: '3%',
+                //paddingTop: '6%',
+                width: '100%',
+              }}>
+
+
+                  <Text 
+                    style={{
+                      color: textColor,
+                      fontSize: textSize,
+                      fontWeight: 'bold',
+                      flex: 1,
+                      flexGrow: 1
+                    }}
+                    numberOfLines={10}
+                    ellipsizeMode='clip'
+                  >
+                    {this.state.firstCommentUserName}
+                    <Text style={{fontWeight: 'normal'}}>
+                      {''} {this.state.firstCommentBody}
+                    </Text>
+                  </Text>
+              </View>
+              }
+              
+              
               /* View Comments */
               <Interactions
                 showViewComments={true}
+                addCommentFunc={this.props.addCommentPress}
               />
             </Animated.View>
 		);
   }
 
-  _getThePics(){
+  _getThePics = async () =>{
 
     /// Get the User Pic
-    Storage.get(this.props.userPic)
+
+    //let bobaOrder = await this._getBobaOrderByUserId(this.props.userId); //if by id
+
+    let bobaOrder = await Piney.bobaOrdersGet(this.props.accessToken,this.props.userId);
+    let theFileName = PineyConstants.profilePicturePrefix + this.props.userId + '.jpeg';
+
+    //console.log('debug -- FeedItem _getThePics() theFileName is ' + theFileName);
+
+    Storage.get(theFileName)
     .then((response) => {
 
       this.setState({
-        getProfPic: response
+        user_profile_pic: response
       })
       //console.log('this.state is ' + JSON.stringify(this.state));
       //console.log('this.props is ' + JSON.stringify(this.props));
@@ -180,12 +227,12 @@ export default class FeedItem extends React.Component {
         this.setState({
           getPostImage: response
         })
-        console.log('this.state is ' + JSON.stringify(this.state));
-        console.log('this.props is ' + JSON.stringify(this.props));
+        //console.log('this.state is ' + JSON.stringify(this.state));
+        //console.log('this.props is ' + JSON.stringify(this.props));
       })
       .catch((err) => console.log('some error with getPostImage'))
     })
-    .catch((err) => console.log('some error with getProfPic'));
+    .catch((err) => console.log('some error with user_profile_pic'));
 
   }
 
@@ -193,7 +240,7 @@ export default class FeedItem extends React.Component {
     if(this.props.editable){
       return(
         <TouchableOpacity
-          onPress={()=>console.log('touchable touched')}
+          //onPress={()=>console.log('touchable touched')}
         >
           <Icon
             name='ellipsis-h'
@@ -204,10 +251,64 @@ export default class FeedItem extends React.Component {
         </TouchableOpacity>
       )
     }
+
+  }
+
+  _getBobaOrderByUserId = async (theUserId) => {
+
+    let theGet = await Piney.bobaOrdersGetById(
+        this.props.accessToken,
+        theUserId);
+
+    //console.log('debug -- _getBobaOrderByUserId() theGet is ' + JSON.stringify(theGet));
+    
+    return theGet ? theGet : false;
+  }
+
+  _getLastCommentEvent = async (theId) => {
+
+    let theGet = await Piney.riderCommentsCommentEventsGet(
+      this.props.accessToken,
+      theId
+    );
+
+    //console.log('debug -- FeedItem _getLastCommentEvent() theId is ' + theId);
+    //console.log('debug -- FeedItem _getLastCommentEvent() theGet is ' + JSON.stringify(theGet));
+
+
+    if(typeof theGet[0] != 'undefined'){
+
+          var b = theGet[0].event_user_name.replace(/\s/g,'');
+          b = b.toLowerCase();
+          this.setState({
+            firstCommentUserName: b,
+            firstCommentBody: theGet[0].event_body
+          })
+
+    }
+
+    else this.setState({
+      firstCommentUserName: '',
+      firstCommentBody: ''
+    })
   }
 
   
 }
+
+/***
+              Interactions -- not using these for now
+
+              <Interactions
+                showHeartAndComment={true}
+                yolo={12}
+                metaData={this.state}
+                addCommentFunc={this.props.addCommentPress}
+              />
+
+              ***/
+
+              //{this.state.commentEvents[0].event_user_name ? this.state.commentEvents[0].event_user_name : ''}
 
 
 

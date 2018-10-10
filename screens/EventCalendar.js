@@ -10,14 +10,16 @@ import {
   View,
   KeyboardAvoidingView,
   AsyncStorage,
-  Alert
+  Alert,
+  FlatList
 } from 'react-native';
 import {
   Button,
   FormLabel,
   FormInput,
   Icon,
-  Tile
+  Tile,
+  ListItem
 } from 'react-native-elements';
 import { 
   Camera,
@@ -29,6 +31,11 @@ import { EventRegister } from 'react-native-event-listeners';
 import LoadingOverlay from '../components/LoadingOverlay';
 import CameraExample from '../components/CameraExample';
 import Colors from '../constants/Colors';
+
+import Piney from '../helpers/Piney';
+import PineyConstants from '../constants/PineyConstants';
+import FeedItem from '../components/FeedItem';
+import { Storage } from 'aws-amplify';
 
 export default class EventCalendar extends React.Component {
   static navigationOptions = {
@@ -81,8 +88,26 @@ export default class EventCalendar extends React.Component {
     
     }
 
-    componentDidMount() {
-      
+    async componentDidMount() {
+
+      let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
+      let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+     
+      this.setState({
+        access_token: theToken,
+        user_id: theUserId
+      })
+
+
+      await this._getBobaOrders()
+      .then((response) => {
+        this.setState({
+          feedItems: response
+        });
+        return true;
+      })
+      .catch((err) => console.log(err));
+
     }
 
   //render
@@ -92,7 +117,7 @@ export default class EventCalendar extends React.Component {
 
     return(
         <View style={{
-          position: 'relative'
+          position: 'relative',
         }}>
           <View style={{
             position: 'absolute',
@@ -106,6 +131,7 @@ export default class EventCalendar extends React.Component {
             style={{
               backgroundColor: 'transparent',
               flexDirection: 'column',
+              width: '100%'
             }}
           >
             <View style={{
@@ -126,21 +152,32 @@ export default class EventCalendar extends React.Component {
                 >
                   Feb. 16
                 </Text>
-                <Text style={h2}>
-                    @ Nutridge Estates
-                </Text>
-                <Text style={h2}>
+                <Text style={h3}>
+                  Nutridge Estates
+                  {'\n'}
                   3280 Round Top Drive
+                  {'\n'}
                   Honolulu, HI 96812
                 </Text>
               </View>
 
               <View style={tileStyleSec}>
-                <Text style={h1Sec}>
-                    Ceremony - 4:30p
-                </Text>
-                <Text style={h2Sec}>
-                  Pre-game BYOB 3:00p. Come enjoy the venue with us!
+                <Text style={h3Sec}>
+                  Pre-game: 3:30p
+                  {'\n'}
+                  Official Doors Open: 4:00p
+                  {'\n'}{'\n'}
+                  <Text style={h1Sec}>
+                  Ceremony: 4:30p
+                  {'\n'}
+                  </Text>
+                  {'\n'}
+                  Dinner: 5:00p
+                  {'\n'}
+                  DJ: 7:00p
+                  {'\n'}
+                  Blackjack & Craps: 8:00p
+                  {'\n'}
                 </Text>
               </View>
             </View>
@@ -151,33 +188,101 @@ export default class EventCalendar extends React.Component {
                 <Text style={h1}>
                     Parking
                 </Text>
-                <Text style={h2}>
+                <Text style={h3}>
                   Preferred spaces for kupuna (elders), others park roadside w/ short walk. Please drive carefully, road is narrow and dimly lit.
                 </Text>
               </View>
 
-              <View style={tileStyleTert}>
-                <Text style={h1Tert}>
-                    Pau Hana - 10:00p
+              <View style={tileStyleSec}>
+                <Text style={h1Sec}>
+                    Unofficial After Party
                 </Text>
-                <Text style={h2Tert}>
-                  Waikiki after party TBD
+                <Text style={h3Sec}>
+                  Cafe Duck Butt or Mai Tai's #cheehoo
                 </Text>
               </View>
             </View>
+
+          /// RSVP attendee list
+          ///
+
+          { /**
+
+            !this.state.refreshing && this.state.feedItems &&
+
+            this.state.feedItems.map((item) => (
+              <ListItem
+                roundAvatar
+                avatar={{uri: Storage.get('proffy-46.jpeg')}}
+                key={item.id}
+                title={item.name ? item.name : ""}
+                subtitle={item.drink_pref ? item.plus_one : ""}
+              />
+            ))
+
+            **/
+          }
+
           </ScrollView>
         </View>
       )
   }
 
+  _getBobaOrders= async () => {
+
+    let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
+    let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+     
+    let theGet = await Piney.bobaOrdersGetByPartition(theToken,{});
+    let theGetResponse = await theGet.json();
+
+    console.log('debug -- EventCalendar _getBobaOrders() theGetResponse is ' + JSON.stringify(theGetResponse));
+    return theGetResponse;
+
+  }
+
+  _checkIfHasBobaOrder = async (userId) => {
+
+    let a = await this._getBobaOrderByUserId(this.state.access_token,this.state.user_id);
+
+      try{ a[0].id; }
+      catch(e) {
+
+          console.log('debug -- HomeFeed _checkIfHasBobaOrder catch error ' + e);
+
+          Alert.alert(
+          'Howzit!',
+          "Looks like you haven't submitted your RSVP yet. Let's get that done now!",
+          [
+            {
+              text: 'OK',
+              onPress: () => this.props.navigation.navigate('Profile')
+            }
+          ],
+          { cancelable: false }
+        )
+      }
+  }
+
+  _getBobaOrderByUserId = async (accessToken,theUserId) => {
+
+    let theGet = await Piney.bobaOrdersGetById(
+        accessToken,
+        theUserId);
+
+    console.log('debug -- _getBobaOrderByUserId() theGet is ' + JSON.stringify(theGet));
+    
+    return theGet ? theGet : false;
+  }
+
 }
 
 
-const primTextColor = '#333';
+const primTextColor = Colors.primaryText;
 const primBgColor = 'transparent';
 
-const secTextColor = 'green';
-const secBgColor = 'lightgreen';
+const secTextColor = Colors.tintColor;
+const secBgColor = Colors.secondaryBackground;
 
 const tertTextColor= 'gold';
 const tertBgColor = 'crimson';
@@ -233,16 +338,23 @@ const h2Tert = {
 
 const h3 = {
   fontFamily: 'Futura',
-  fontSize: 12,
+  fontSize: 18,
   textAlign: 'left',
   color: primTextColor
 }
 
 const h3Sec = {
   fontFamily: 'Futura',
-  fontSize: 12,
+  fontSize: 18,
   textAlign: 'right',
   color: secTextColor
+}
+
+const h3Tert = {
+  fontFamily: 'Futura',
+  fontSize: 18,
+  textAlign: 'right',
+  color: tertTextColor
 }
 
 const tileStyle = {

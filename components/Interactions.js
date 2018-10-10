@@ -67,8 +67,8 @@ export default class FeedItem extends React.Component {
               <Icon
                 name='heart'
                 type='font-awesome'
-                color={Colors.tintColor}
-                onPress={this.props.onActionPress}
+                color={Colors.errorBackground}
+                onPress={() => console.log('')}
                 size={30}
               />
             </View>
@@ -78,8 +78,8 @@ export default class FeedItem extends React.Component {
               <Icon
                 name='comment-o'
                 type='font-awesome'
-                color={Colors.tintColor}
-                onPress={this.props.onActionPress}
+                color={Colors.primaryText}
+                onPress={this.props.addCommentFunc}
                 size={31}
               />
             </View>
@@ -99,11 +99,15 @@ export default class FeedItem extends React.Component {
           flexDirection: 'row',
           paddingLeft: '3%'
         }}>
-          <Text style={{
-            color: 'gray'
-          }}>
-            View All Comments...
-          </Text>
+          <TouchableOpacity
+            onPress={this.props.addCommentFunc}
+          >
+            <Text style={{
+              color: 'gray'
+            }}>
+              View All Comments...
+            </Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -129,6 +133,14 @@ export default class FeedItem extends React.Component {
       );
     }
     else return(<View></View>);
+  }
+
+  _addComment(){
+
+    let metaData = this.props.metaData;
+    this.props.navvy.navigate('Comment',{
+      metaData
+    });
   }
 
 }

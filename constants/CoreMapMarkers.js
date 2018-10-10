@@ -12,7 +12,8 @@ export default
       callOut: {
         h1: "Portland",
         cap1: "Adventure #1"
-      } 
+      },
+      category: 'shukforrest'
     },
     {
       lat: 47.6101,
@@ -21,7 +22,8 @@ export default
       callOut: {
         h1: "Seattle",
         cap1: "Adventure #2"
-      }
+      },
+      category: 'shukforrest'
     },
     {
       lat: 40.692809,
@@ -30,7 +32,8 @@ export default
       callOut: {
         h1: "New York",
         cap1: "Adventure #3"
-      }
+      },
+      category: 'shukforrest'
     },
     {
       lat: 36.1293,
@@ -39,16 +42,8 @@ export default
       callOut: {
         h1: "Las Vegas",
         cap1: "Honorable mention"
-      }
-    },
-    {
-      lat: 21.316714,
-      long: -157.819206,
-      pinColor: primColor,
-      callOut: {
-        h1: "The Big Day @ Nutridge Estate",
-        cap1: "3280 Round Top Dr.  Honolulu, HI 96822"
-      }
+      },
+      category: 'shukforrest'
     },
     {
       lat: 21.284270,
@@ -56,8 +51,9 @@ export default
       pinColor: secColor,
       callOut: {
         h1: "Ilikai Condos",
-        cap1: "Great AirBnB condos, also has hotel rooms. Beachy vibes, well priced"
-      }
+        cap1: "Waikiki AirBnb rentals, pretty decent"
+      },
+      category: 'lodging'
     },
     {
       lat: 21.282335, 
@@ -65,339 +61,129 @@ export default
       pinColor: secColor,
       callOut: {
         h1: "Hilton Hawaiian Village",
-        cap1: "Resort accomodations with everything you'd need. Upscale choice."
-      }
+        cap1: "Resort in Waikiki, upscale"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.281001, 
+      long: -157.814051,
+      pinColor: secColor,
+      callOut: {
+        h1: "Kapahulu",
+        cap1: "20m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.305037, 
+      long: -157.821822,
+      pinColor: secColor,
+      callOut: {
+        h1: "Manoa",
+        cap1: "15m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.298040, 
+      long: -157.794129,
+      pinColor: secColor,
+      callOut: {
+        h1: "Palolo",
+        cap1: "20m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.329412, 
+      long: -157.847369,
+      pinColor: secColor,
+      callOut: {
+        h1: "Nuuanu",
+        cap1: "15m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.393041, 
+      long: -157.740132,
+      pinColor: secColor,
+      callOut: {
+        h1: "Kailua",
+        cap1: "(Forrest's hood) 30m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.290575, 
+      long: -157.839557,
+      pinColor: secColor,
+      callOut: {
+        h1: "Ala Moana Hotel",
+        cap1: "Not Waikiki walkable but is connected to world famous Ala Moana Shopping Center"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.292062, 
+      long: -157.845660,
+      pinColor: secColor,
+      callOut: {
+        h1: "Shirokiya Beer Garden",
+        cap1: "Our favorite spot to meet Da Braddahs. $1 Beers + Japanese food vendors"
+      },
+      category: 'drink'
+    },
+    {
+      lat: 21.290761, 
+      long: -157.842709,
+      pinColor: secColor,
+      callOut: {
+        h1: "Mai Tais",
+        cap1: "Another favorite spot to meet. Best pupu: kalua pig nachos"
+      },
+      category: 'drink'
+    },
+    {
+      lat: 21.298438, 
+      long: -157.854264,
+      pinColor: secColor,
+      callOut: {
+        h1: "Cafe Duck Butt",
+        cap1: "Our favorite Korean soju karaoke spot, poor parking situation"
+      },
+      category: 'drink'
+    },
+    {
+      lat: 21.271973, 
+      long: -157.799504,
+      pinColor: secColor,
+      callOut: {
+        h1: "Kaimuki",
+        cap1: "20m to venue"
+      },
+      category: 'lodging'
+    },
+    {
+      lat: 21.292532, 
+      long: -157.846761,
+      pinColor: secColor,
+      callOut: {
+        h1: "Foodland",
+        cap1: "Our favorite poke, multiple locations around the island"
+      },
+      category: 'food'
+    },
+    {
+      lat: 21.288085, 
+      long: -157.814945,
+      pinColor: secColor,
+      callOut: {
+        h1: "Gina's BBQ",
+        cap1: "Our favorite local Korean plate lunch.  Get the Meat Jun."
+      },
+      category: 'food'
     },
 
   ];
-
-
-
-/*** SuperMap.render() marker data here for ref
-
-     <MapView.Marker
-          key={'AlohaWorld1'}
-          coordinate={{
-            latitude: 21.316714,
-            longitude: -157.819206
-          }}
-          pinColor={'gold'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'black'}}
-              >
-                The Big Day @
-              </Text>
-              <Text style={{
-                color: 'black'}}
-              >
-                Nutridge Estates
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                2780 Nutridge St.
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Honolulu, HI 96822
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld2'}
-          coordinate={{
-            latitude: 45.505501, 
-            longitude: -122.783539
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Cedar Hills
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First apartment
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld3'}
-          coordinate={{
-            latitude: 51.513306,
-            longitude: -0.129871
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                London
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld4'}
-          coordinate={{
-            latitude: 22.442815, 
-            longitude: 114.164448
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Taipo HK
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Suki's OG hood
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld5'}
-          coordinate={{
-            latitude: 36.129493, 
-            longitude: -115.165687
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Vegas
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                #honorablemention
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-         <MapView.Marker
-          key={'AlohaWorld6'}
-          coordinate={{
-            latitude: 47.618397, 
-            longitude: -122.191252
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Bellevue
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First home away from PDX
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld7'}
-          coordinate={{
-            latitude: 40.692809, 
-            longitude: -73.986019
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Downtown Brooklyn
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Our home
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld9'}
-          coordinate={{
-            latitude: 45.523764, 
-            longitude: -122.680406
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Barrel Room
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                #honorablemention
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld10'}
-          coordinate={{
-            latitude: 45.508944, 
-            longitude: -122.666346
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                OMSI
-              </Text>
-              <Text style={{
-                color: 'gray'
-              }}>
-                First date
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld11'}
-          coordinate={{
-            latitude: 41.393311, 
-            longitude: 2.161517
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Barcelona
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-        <MapView.Marker
-          key={'AlohaWorld12'}
-          coordinate={{
-            latitude: 52.512295, 
-            longitude: 13.392826
-          }}
-          pinColor={'blue'}
-          onPress={() => console.log('Marker pressed')}
-        >
-          <MapView.Callout
-            tooltip={false}
-            onPress={()=> console.log('Callout pressed')}
-            style={{
-              //width: 150
-            }}
-          >
-            <View>
-              <Text style={{
-                color: 'gray'
-              }}>
-                Berlin
-              </Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-**/

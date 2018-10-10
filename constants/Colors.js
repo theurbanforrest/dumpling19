@@ -1,5 +1,5 @@
-const tintColor = 'green';
-const tintColorAccent = 'green';
+const tintColor = '#91000F';
+const tintColorAccent = '#91000F';
 const inactiveColor = '#ccc';
 const errorBackground = 'coral';
 const inactiveColorDark = '#999';
@@ -24,7 +24,7 @@ export default {
   primaryBackground: 'white',
 
   secondaryText: 'gold',
-  secondaryBackground: 'lightgreen',
+  secondaryBackground: 'pink',
 
   h1: {
     fontFamily: 'Futura-Bold',

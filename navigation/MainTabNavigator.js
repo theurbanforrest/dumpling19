@@ -4,18 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeFeed from '../screens/HomeFeed';
+//import HomeFeed from '../screens/HomeFeed';
 import SuperMap from '../screens/SuperMap';
 import Profile from '../screens/Profile';
 import EventCalendar from '../screens/EventCalendar';
 import PostInitiator from '../screens/PostInitiator';
 import PostMediaEditor from '../components/PostMediaEditor';
+import CommentDetail from '../components/CommentDetail';
+
+///Testing a HomeFeed with paging
+///
+import HomeFeed from '../screens/HomeFeed';
 
 
 const HomeFeedStack = createStackNavigator({
   Home: HomeFeed,
   Start: PostInitiator,
-  Edit: PostMediaEditor
+  Edit: PostMediaEditor,
+  Comment: CommentDetail
 })
 
 const EventCalendarStack = createStackNavigator({

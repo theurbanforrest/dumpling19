@@ -90,19 +90,20 @@ export default class PostMediaEditor extends React.Component {
       //console.log('debug -- PostMediaEditor componentDidMount() theGet is ' + theGet.name);
 
             await this.setState({
-              user_name: theGet[0].name
+              user_name: theGet[0].name,
+              user_id: theGet[0].id
             });
 
       
       if(this.state.newPostMode === false){
         console.log('debug -- PostMediaEditor componentDidMount() ..photo.uri does not exist. Trying Storage.get()..');
         
-        let a = await Storage.get(encodeURI(PineyConstants.postPicturePrefix + this.props.navigation.state.params.x.id + '.jpeg'));
+        let a = await Storage.get(encodeURI(PineyConstants.postPicturePrefix + this.props.navigation.state.params.item.id + '.jpeg'));
         console.log('debug -- PostMediaEditor componentDidMount() is ' + JSON.stringify(a));
 
         this.setState({
           pictureToEdit: a,
-          comment: this.props.navigation.state.params.x.comment_body
+          comment: this.props.navigation.state.params.item.comment_body
         })
         
       }
@@ -226,13 +227,13 @@ export default class PostMediaEditor extends React.Component {
 
     _removeThisRiderCommentFromPartition = async (data) => {
       let thePut = await Piney.riderCommentsPut(data.access_token, {
-        id: this.state.newPostMode ? null : this.props.navigation.state.params.x.id,         //for some reason, this cannot be set which makes no sense
+        id: this.state.newPostMode ? null : this.props.navigation.state.params.item.id,         //for some reason, this cannot be set which makes no sense
                           //need to debug in order for Updates to be made properly
                           //this works for BobaOrders PUT  
                           //
                           //
-        userId: this.state.newPostMode ? data.user_id : this.props.navigation.state.params.x.user_id ,
-        userName: this.state.newPostMode ? data.user_name : this.props.navigation.state.params.x.user_name ,
+        userId: this.state.newPostMode ? this.state.user_id : this.state.user_id ,
+        userName: this.state.newPostMode ? data.user_name : this.props.navigation.state.params.item.user_name ,
         commentBody: data.comment,
         stationName: PineyConstants.stationLinesPartitionDeleteKey
       })
@@ -258,13 +259,13 @@ export default class PostMediaEditor extends React.Component {
       //let theUserName = 'jimmy choo';
       let theCommentBody = 'another one';
       let thePut = await Piney.riderCommentsPut(data.access_token, {
-        id: this.state.newPostMode ? null : this.props.navigation.state.params.x.id,         //for some reason, this cannot be set which makes no sense
+        id: this.state.newPostMode ? null : this.props.navigation.state.params.item.id,         //for some reason, this cannot be set which makes no sense
                           //need to debug in order for Updates to be made properly
                           //this works for BobaOrders PUT  
                           //
                           //
-        userId: this.state.newPostMode ? data.user_id : this.props.navigation.state.params.x.user_id ,
-        userName: this.state.newPostMode ? data.user_name : this.props.navigation.state.params.x.user_name ,
+        userId: this.state.newPostMode ? this.state.user_id : this.state.user_id ,
+        userName: this.state.newPostMode ? data.user_name : this.props.navigation.state.params.item.user_name ,
         commentBody: data.comment,
         stationName: PineyConstants.stationLinesPartition
       })
@@ -277,13 +278,10 @@ export default class PostMediaEditor extends React.Component {
       let theToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
       let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
      
-      let theLastRecord = await Piney.riderCommentsFindMyLast(theToken,{
-        userId: theUserId
-      });
-
+      let theLastRecord = await Piney.riderCommentsFindLast(theToken);
       let theLastRecordResponse = await theLastRecord.json();
 
-      //console.log('theLastRecord is ' + JSON.stringify(theLastRecordResponse));
+      //console.log('debug -- PostMediaEditor theLastRecord is ' + JSON.stringify(theLastRecordResponse));
 
       const manipResult = await ImageManipulator.manipulate(
         theMediaUri,

@@ -70,7 +70,7 @@ const LoadingOverlay = (props: LoadingOverlayProps) => {
             color: '#97ACB3',
             fontSize: 24,
           }}
-          onPress={() => Piney.aloha()}
+          onPress={onCancelPress}
         />
       </View>
     )
