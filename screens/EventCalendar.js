@@ -77,14 +77,6 @@ export default class EventCalendar extends React.Component {
                 fetchIsLoading,
             })
         })
-
-        //Permission to use Camera
-        const { cameraPermissionStatus } = await Permissions.askAsync(Permissions.CAMERA);
-          this.setState({ hasCameraPermission: cameraPermissionStatus === 'granted' });
-
-        //Permission to use Camera Roll
-        const { cameraRollPermissionStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          this.setState({ hasCameraPermission: cameraRollPermissionStatus === 'granted' });
     
     }
 

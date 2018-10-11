@@ -55,7 +55,11 @@ export default class App extends React.Component {
           require('./assets/images/gray-pine.png'),
           require('./assets/images/nutridge-overlook.png'),
           require('./assets/images/engaged.png'),
-          require('./assets/images/bg-piney.png')
+          require('./assets/images/bg-piney.png'),
+          require('./assets/images/pray-for-me.png'),
+          require('./assets/images/ayo.png'),
+          require('./assets/images/hey-mama.png'),
+          require('./assets/images/flashing-cameras.png')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar

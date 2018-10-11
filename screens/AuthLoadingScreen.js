@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import Piney from '../helpers/Piney';
 
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -16,15 +17,35 @@ export default class AuthLoadingScreen extends React.Component {
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
 
-    /** USERTOKEN WITH ASYNCSTORAGE **/
-    const userToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
-    
+    /** Get userToken, User ID, and BobaOrder **/
+      const userToken = await AsyncStorage.getItem('@ShukForrestWedding:userToken');
+      let theUserId = Expo.Constants.deviceId ? Expo.Constants.deviceId : Expo.Constants.installationId;
+      let theBobaOrder = await this._getBobaOrderByUserId(userToken,theUserId);
+
 
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'Main' : 'Auth');
+
+    if(!userToken){
+      this.props.navigation.navigate('Auth');
+    }
+    else if(!theBobaOrder[0]){
+      this.props.navigation.navigate('Onboarding');
+    }
+    else this.props.navigation.navigate('Main');
 
   };
+
+  _getBobaOrderByUserId = async (accessToken,theUserId) => {
+
+    let theGet = await Piney.bobaOrdersGetById(
+        accessToken,
+        theUserId);
+
+    console.log('debug -- AuthLoadingScreen _getBobaOrderByUserId() theGet is ' + JSON.stringify(theGet));
+    
+    return theGet ? theGet : false;
+  }
 
   componentWillUnmount(){
     console.log('Start componentWillUnmount of AuthLoadingScreen.js');
@@ -40,4 +61,7 @@ export default class AuthLoadingScreen extends React.Component {
       </View>
     );
   }
+
+  
+
 }

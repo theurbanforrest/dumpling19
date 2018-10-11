@@ -136,7 +136,7 @@ export default class CommentItem extends React.Component {
         </TouchableOpacity>
       )
     }
-    else return(<View><Text>Bro</Text></View>)
+    
   }
 
   _getBobaOrderByUserId = async (accessToken,theUserId) => {

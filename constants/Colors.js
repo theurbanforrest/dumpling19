@@ -37,6 +37,13 @@ export default {
     color: tintColor
   },
 
+  h2Center: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    color: tintColor,
+    textAlign: 'center'
+  },
+
   h2Reverse: {
     fontFamily: 'Futura',
     fontSize: 24,

@@ -178,7 +178,11 @@ export default class Profile extends React.Component {
                   alignItems: 'center'
                 }}>
 
-                  {this.state.user_profile_id > 0 ? this._showImagePicker() : ''}
+                  {//this.state.user_profile_id > 0 ? this._showImagePicker() : ''
+
+                    this._showImagePicker()
+
+                  }
 
                 </View>
                 <View style={{
@@ -783,6 +787,7 @@ export default class Profile extends React.Component {
       <ImagePickerExample
         metaData={this.state}
         picToShow={this.state.id ? encodeURI(PineyConstants.profilePicturePrefix + this.state.id + '.jpeg') : PineyConstants.defaultProfilePicture}
+        editable={this.state.id ? true : false}
       />
     )
   }

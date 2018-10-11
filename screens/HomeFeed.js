@@ -24,7 +24,8 @@ import {
 import { 
   WebBrowser,
   ImagePicker,
-  ImageManipulator
+  ImageManipulator,
+  Permissions
 } from 'expo';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -72,16 +73,6 @@ export default class HomeFeed extends React.Component {
                 accessKey,
             })
         })
-
-        /***
-        //EventRegister > fetchIsLoading
-        this.listener = EventRegister.addEventListener('fetchIsLoading', (fetchIsLoading) => {
-            console.log('fetchIsLoading emitted with ' + fetchIsLoading);
-            this.setState({
-                fetchIsLoading,
-            })
-        })
-        ***/
 
         //EventRegister > pictureTaken
         this.listener = EventRegister.addEventListener('pictureTaken', (photo) => {
@@ -290,6 +281,28 @@ export default class HomeFeed extends React.Component {
   }
 
   _takePictureWithCamera = async () => {
+
+    /// Get permission to use camera
+    const { cameraPermissionStatus } = await Permissions.askAsync(Permissions.CAMERA);
+      this.setState({ hasCameraPermission: cameraPermissionStatus === 'granted' });
+
+    if(this.state.hasCameraPermission != 'granted'){
+      Alert.alert(
+          'Auwee..',
+          "You must allow Expo to access your camera to add a memory",
+          [
+            {
+              text: 'OK',
+            }
+          ],
+          { cancelable: false }
+        );
+
+      return false;
+    }
+
+    /// Else continue
+
     let result = await ImagePicker.launchCameraAsync({});
 
     //console.log(result);
@@ -310,6 +323,29 @@ export default class HomeFeed extends React.Component {
   }
 
   _pickFromLibrary = async () => {
+
+    /// Get permission to use camera
+    const { cameraRollPermissionStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      this.setState({ hasCameraRollPermission: cameraRollPermissionStatus === 'granted' });
+
+    if(this.state.hasCameraRollPermission != 'granted'){
+      Alert.alert(
+          'Auwee..',
+          "You must allow Expo to access your camera roll to add a memory",
+          [
+            {
+              text: 'OK',
+            }
+          ],
+          { cancelable: false }
+        );
+
+      return false;
+    }
+
+    /// Else continue
+
+
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],

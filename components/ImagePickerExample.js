@@ -72,7 +72,7 @@ export default class ImagePickerExample extends React.Component {
             paddingBottom: 10,
             color: Colors.tintColor
           }}>
-            + Edit Photo
+            {this.props.editable ? '+ Update My Photo' : 'RSVP below!' }
           </Text>
         </TouchableOpacity>
       </View>
